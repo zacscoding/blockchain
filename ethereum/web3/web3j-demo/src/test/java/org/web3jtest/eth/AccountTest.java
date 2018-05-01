@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3jtest.AbstractTestRunner;
+import org.web3jtest.util.SimpleLogger;
 
 /**
  * @author zacconding
@@ -15,7 +16,7 @@ public class AccountTest extends AbstractTestRunner {
     @Test
     public void getAccountsAndBalance() throws Exception {
         for(String acc : web3j.ethAccounts().send().getAccounts()) {
-            web3j.ethGetBalance(acc, DefaultBlockParameterName.LATEST).send().getBalance();
+            SimpleLogger.println("Account : {} ==> Balance : {}", acc, web3j.ethGetBalance(acc, DefaultBlockParameterName.LATEST).send().getBalance());
         }
     }
 }
