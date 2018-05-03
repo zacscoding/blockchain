@@ -20,7 +20,7 @@ public class TransactionTest extends AbstractTestRunner {
     @Test
     public void findTxByHash() throws Exception {
         List<String> hashes = Arrays.asList(
-            "0xbcd49c7464c9474a27f1d293d7398e2be5f497387007dd3c3dfafd9b6ad0c537"
+            "0x638c01101169890647e546637905b7ffbb4993d8db858ca3bac1b4e5cb381e5b"
         );
 
         for (String hash : hashes) {
