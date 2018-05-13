@@ -1,8 +1,10 @@
 package org.web3jtest.eth;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import java.math.BigInteger;
 import org.junit.Test;
 import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3jtest.AbstractTestRunner;
 import org.web3jtest.util.SimpleLogger;
@@ -32,5 +34,21 @@ public class BlockTest  extends AbstractTestRunner {
         }
     }
 
+    @Test
+    public void findUncles() throws Exception {
+        BigInteger blockNumber = web3j.ethBlockNumber().send().getBlockNumber();
+        boolean complete = false;
+        Block block = null;
 
+        while(!complete) {
+            block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(blockNumber), true).send().getBlock();
+            if(block.getUncles().size() > 0) {
+                complete = true;
+            }
+
+            blockNumber = blockNumber.subtract(BigInteger.valueOf(1));
+        }
+
+        SimpleLogger.printJSONPretty(block);
+    }
 }

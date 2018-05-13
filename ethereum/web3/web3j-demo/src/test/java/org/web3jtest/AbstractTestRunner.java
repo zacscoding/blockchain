@@ -23,7 +23,7 @@ public class AbstractTestRunner {
 
     @BeforeClass
     public static void setUp() {
-        web3j = Web3j.build(new HttpService("http://192.168.79.128:8541"));
+        web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
     }
 
     @Test
