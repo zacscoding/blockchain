@@ -1,12 +1,17 @@
 package org.web3jtest.eth;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
+import org.web3j.protocol.core.methods.response.EthFilter;
+import org.web3j.protocol.core.methods.response.EthLog.LogResult;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3jtest.AbstractTestRunner;
+import org.web3jtest.util.GsonUtil;
 import org.web3jtest.util.SimpleLogger;
 import rx.Subscription;
 
@@ -30,8 +35,24 @@ public class TransactionTest extends AbstractTestRunner {
     }
 
     @Test
+    public void test() throws Exception {
+        BigInteger filterId = web3j.ethNewPendingTransactionFilter().send().getFilterId();
+        System.out.println("## Filter id : " + filterId);
+        web3j.ethGetFilterLogs(filterId).sendAsync().thenAccept(action -> {
+            List<LogResult> results = action.getLogs();
+            System.out.println(results.get(0).getClass().getName());
+            for(LogResult result : results) {
+                GsonUtil.printGsonPretty(result);
+            }
+        });
+
+        TimeUnit.MINUTES.sleep(1);
+        SimpleLogger.info("@@ end..");
+    }
+
+    @Test
     public void pendingTxns() throws Exception {
-        Subscription txSubscription = web3j.transactionObservable().subscribe(
+        Subscription txSubscription = web3j.pendingTransactionObservable().subscribe(
             tx -> {
                 try {
                     SimpleLogger logger = SimpleLogger.build();
@@ -62,6 +83,14 @@ public class TransactionTest extends AbstractTestRunner {
     @Test
     public void sendTx() throws Exception {
         //org.web3j.protocol.core.methods.request.Transaction sendTx = new org.web3j.protocol.core.methods.request.Transaction.createEtherTransaction();
+    }
+
+    @Test
+
+    public void newTransactionFilter() throws Exception {
+        BigInteger filterId = web3j.ethNewPendingTransactionFilter().send().getFilterId();
+
+
     }
 
 
