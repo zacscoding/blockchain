@@ -24,16 +24,12 @@ public class AbstractTestRunner {
     @BeforeClass
     public static void setUp() {
         // web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
-        web3j = Web3j.build(new HttpService("http://192.168.5.15:9540"));
+        // web3j = Web3j.build(new HttpService("http://192.168.5.15:9540"));
+        web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
     }
 
     @Test
     public void contextLoad() throws Exception {
         System.out.println(web3j.web3ClientVersion().send().getWeb3ClientVersion());
-        List<String> accounts = web3j.ethAccounts().send().getAccounts();
-        accounts.forEach(acc -> {
-            System.out.println(acc);
-        });
-
     }
 }

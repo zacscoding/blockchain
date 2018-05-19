@@ -1,6 +1,8 @@
 package org.demo.crypto;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 import org.apache.tomcat.util.buf.HexUtils;
 import org.demo.util.SimpleLogger;
@@ -40,5 +42,12 @@ public class HashUtilTest {
             String outputStr  = Hex.toHexString(output);
             SimpleLogger.println("Input : {}\nOutput : {}", input, outputStr);
         }
+    }
+
+    @Test
+    public void txHashEnDecode() {
+        String txHash = "546131e3fb8d08b90461717315aead7c66cc4bc2d2daf8900b2c71a7a981b5c6";
+        byte[] decode = Hex.decode(txHash);
+        assertThat(txHash, is(Hex.toHexString(decode)));
     }
 }
