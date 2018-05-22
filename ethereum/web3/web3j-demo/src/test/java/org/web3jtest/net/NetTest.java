@@ -30,4 +30,9 @@ public class NetTest extends AbstractTestRunner  {
                     .appendln("Net Listening : {}", web3j.netListening().send().isListening())
                     .flush();
     }
+
+    @Test
+    public void netListening() throws Exception {
+        System.out.println(web3j.netListening().send().isListening());
+    }
 }

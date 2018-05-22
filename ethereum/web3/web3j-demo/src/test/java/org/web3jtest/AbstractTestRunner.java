@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
 
 /**
@@ -20,12 +21,15 @@ import org.web3j.protocol.http.HttpService;
 // @SpringBootTest
 public class AbstractTestRunner {
     public static Web3j web3j;
+    public static Admin admin;
 
     @BeforeClass
     public static void setUp() {
         // web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
         // web3j = Web3j.build(new HttpService("http://192.168.5.15:9540"));
-        web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
+        HttpService httpService = new HttpService("http://192.168.79.128:8543");
+        web3j = Web3j.build(httpService);
+        admin = Admin.build(httpService);
     }
 
     @Test

@@ -76,7 +76,17 @@
             <version>3.4.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.3.8</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>jsonrpc2-client</artifactId>
+            <version>1.15</version>
+        </dependency>
 
     </dependencies>
 
