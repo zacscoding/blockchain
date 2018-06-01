@@ -24,6 +24,14 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>ethereumj</id>
+            <name>ethereumj</name>
+            <url>https://dl.bintray.com/ethereum/maven/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,6 +94,12 @@
             <groupId>com.thetransactioncompany</groupId>
             <artifactId>jsonrpc2-client</artifactId>
             <version>1.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ethereum</groupId>
+            <artifactId>ethereumj-core</artifactId>
+            <version>1.7.2-RELEASE</version>
         </dependency>
 
     </dependencies>

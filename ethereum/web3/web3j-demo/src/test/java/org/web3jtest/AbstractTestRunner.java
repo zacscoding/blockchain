@@ -26,8 +26,11 @@ public class AbstractTestRunner {
     @BeforeClass
     public static void setUp() {
         // web3j = Web3j.build(new HttpService("http://192.168.79.128:8540"));
-        // web3j = Web3j.build(new HttpService("http://192.168.5.15:9540"));
-        HttpService httpService = new HttpService("http://192.168.79.128:8543");
+        // web3j = Web3j.build(new HttpService("http://192.168.5.15:8540"));
+        HttpService httpService = new HttpService("http://192.168.5.50:8540");
+        // HttpService httpService = new HttpService("http://192.168.5.50:8543");
+        // HttpService httpService = new HttpService("http://192.168.79.128:8543");
+        // HttpService httpService = new HttpService("http://192.168.5.77:8540");
         web3j = Web3j.build(httpService);
         admin = Admin.build(httpService);
     }

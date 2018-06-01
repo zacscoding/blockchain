@@ -17,6 +17,7 @@ import org.web3jtest.AbstractTestRunner;
 import org.web3jtest.util.GsonUtil;
 import org.web3jtest.util.LogLevelUtil;
 import org.web3jtest.util.SimpleLogger;
+import rx.Subscription;
 
 /**
  * @author zacconding
@@ -32,9 +33,35 @@ public class BlockTest extends AbstractTestRunner {
     }
 
     @Test
+    public void temp() throws Exception {
+        Subscription subscription = web3j.replayBlocksObservable(
+            DefaultBlockParameter.valueOf(BigInteger.ONE),
+            DefaultBlockParameter.valueOf(BigInteger.valueOf(3)), false).subscribe(blk -> {
+            SimpleLogger.println("## Receive {} => {}", blk.getBlock().getHash(), blk.getBlock().getHash());
+        });
+
+        Thread.sleep(3000L);
+        subscription.unsubscribe();
+    }
+
+    @Test
+    public void getBlockByHash() throws Exception {
+        String[] hashes = {
+            "0x22ac73e4229e4a8bb1ad109eb0942e3902e6e8519f1bdaf06a624f17489e1642",
+            "0x22ac73e4229e4a8bb1ad109eb0942e3902e6e8519f1bdaf06a624f17489e16421"
+        };
+
+        for (String hash : hashes) {
+            Block block = web3j.ethGetBlockByHash(hash, false).send().getBlock();
+            System.out.println(block);
+        }
+    }
+
+    @Test
     public void checkBlocksFromTo() throws Exception {
-        BigInteger lastRangeNumber = BigInteger.valueOf(10L);
-        BigInteger startRangeNumber = BigInteger.valueOf(0L);
+        LogLevelUtil.setInfo();
+        BigInteger lastRangeNumber = BigInteger.valueOf(8L);
+        BigInteger startRangeNumber = BigInteger.valueOf(-1L);
         int size = lastRangeNumber.subtract(startRangeNumber).intValue();
 
         for (int i = 0; i < size; i++) {
