@@ -1,0 +1,197 @@
+16:47:58.731 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:47:58.733 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
+16:53:37.816 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:53:37.819 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
+16:55:54.796 DEBUG [o.a.h.c.p.RequestAddCookies]  CookieSpec selected: default
+16:55:54.813 DEBUG [o.a.h.c.p.RequestAuthCache]  Auth cache not set in the context
+16:55:54.815 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection request: [route: {}->http://192.168.79.128:8540][total kept alive: 0; route allocated: 0 of 2; total allocated: 0 of 20]
+16:55:54.830 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection leased: [id: 0][route: {}->http://192.168.79.128:8540][total kept alive: 0; route allocated: 1 of 2; total allocated: 1 of 20]
+16:55:54.832 DEBUG [o.a.h.i.e.MainClientExec]  Opening connection {}->http://192.168.79.128:8540
+16:55:54.835 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connecting to /192.168.79.128:8540
+16:56:21.798 DEBUG [o.a.h.c.p.RequestAddCookies]  CookieSpec selected: default
+16:56:21.807 DEBUG [o.a.h.c.p.RequestAuthCache]  Auth cache not set in the context
+16:56:21.808 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection request: [route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 0 of 2; total allocated: 0 of 20]
+16:56:21.817 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection leased: [id: 0][route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 1 of 2; total allocated: 1 of 20]
+16:56:21.818 DEBUG [o.a.h.i.e.MainClientExec]  Opening connection {}->http://192.168.5.77:8540
+16:56:21.820 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connecting to /192.168.5.77:8540
+16:56:21.821 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connection established 192.168.5.1:57256<->192.168.5.77:8540
+16:56:21.821 DEBUG [o.a.h.i.e.MainClientExec]  Executing request POST / HTTP/1.1
+16:56:21.821 DEBUG [o.a.h.i.e.MainClientExec]  Target auth state: UNCHALLENGED
+16:56:21.821 DEBUG [o.a.h.i.e.MainClientExec]  Proxy auth state: UNCHALLENGED
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> POST / HTTP/1.1
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept: application/json
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-type: application/json;charset=UTF-8
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-Length: 80
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Host: 192.168.5.77:8540
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Connection: Keep-Alive
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)
+16:56:21.822 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept-Encoding: gzip,deflate
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "POST / HTTP/1.1[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept: application/json[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-type: application/json;charset=UTF-8[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-Length: 80[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Host: 192.168.5.77:8540[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "[\r][\n]"
+16:56:21.823 DEBUG [o.a.h.wire]  http-outgoing-0 >> "{"method":"eth_getBlockByNumber","id":"0","params":["0x1",true],"jsonrpc":"2.0"}"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "Content-Type: application/json[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "Transfer-Encoding: chunked[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "Date: Tue, 05 Jun 2018 07:56:21 GMT[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "E90[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "{"jsonrpc":"2.0","result":{"author":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","difficulty":"0xfffffffffffffffffffffffff6e42de3","extraData":"0xd58301080b8650617269747986312e32352e30826c69","gasLimit":"0xea99","gasUsed":"0xa410","hash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","miner":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","number":"0x1","parentHash":"0xe9eed6525b197820b5d0af33938e14fc7aaefbf53b1ae8165362ee80ef01c0da","receiptsRoot":"0xd6ff63c0a312f30455478dcb1de937ea27034c8de42fcf11fa2cf969b1d7634e","sealFields":["0x84091bd21c","0xb841ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500"],"sha3Uncles":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347","signature":"ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500","size":"0x30e","stateRoot":"0x466f275b0687af0319717d19f680b5c8d54216eab039cb60a9cec40ad7733679","step":"152818204","timestamp":"0x5b163518","totalDifficulty":"0xfffffffffffffffffffffffff6e62de3","transactions":[{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x00cc5a03e7166baa2df1d449430581d92abb0a1e","gas":"0x5208","gasPrice":"0x0","hash":"0x61805560af70a9531ff9316662f9c9aed573a3bed8c6f009c61e03ca87595b07","input":"0x","nonce":"0x0","publicKey":"0x8f2053a8d69a36903c4c2423bb99b8365aff9e74cd7740af04b0a969a2d5b45882f26fac9dc1a26fd5b3448ec76da8fdecb1e0cb048f1f2d7d08d44daef8086d","r":"0xbc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388","raw":"0xf8648080825208940046f91449e4b696d48c9dd10703cb589649c265830116398082466aa0bc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388a01ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","s":"0x1ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","standardV":"0x1","to":"0x0046f91449e4b696d48c9dd10703cb589649c265","transactionIndex":"0x0","v":"0x466a","value":"0x11639"},{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x0094bc2c3b585928dfeaf85e96ba57773c0673c1","gas":"0x5208","gasPrice":"0x0","hash":"0x1e5e50592c7e7ab63e49125cdedddb5b072b91c85cc19d895aaa8eddd07d21f6","input":"0x","nonce":"0x0","publicKey":"0x857b8188f02d8bc2d701255f3f51296fd31e1acc1c341d49a365aa4e2c3308798bea01a90d29553ba0b8cabcd08eb5f8e403c820abde93de4f6b1f07b7136e16","r":"0xcf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8","raw":"0xf8648080825208940008fba8d298de8f6ea7385d447f4d3252dc0880830f071d80824669a00cf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8a03aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","s":"0x3aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","standardV":"0x0","to":"0x0008fba8d298de8f6ea7385d447f4d3252dc0880","transactionIndex":"0x1","v":"0x4669","value":"0xf071d"}],"transactionsRoot":"0x1ff6bfbb37b922206d7cca598301ac130a724b6e3c4be825f7d8a37f2675ae4c","uncles":[]},"id":0}[\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "0[\r][\n]"
+16:56:21.825 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:21.827 DEBUG [o.a.h.headers]  http-outgoing-0 << HTTP/1.1 200 OK
+16:56:21.827 DEBUG [o.a.h.headers]  http-outgoing-0 << Content-Type: application/json
+16:56:21.827 DEBUG [o.a.h.headers]  http-outgoing-0 << Transfer-Encoding: chunked
+16:56:21.827 DEBUG [o.a.h.headers]  http-outgoing-0 << Date: Tue, 05 Jun 2018 07:56:21 GMT
+16:56:21.836 DEBUG [o.a.h.i.e.MainClientExec]  Connection can be kept alive indefinitely
+16:56:21.837 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:56:21.838 DEBUG [o.a.h.i.c.DefaultManagedHttpClientConnection]  http-outgoing-0: Close connection
+16:56:21.838 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
+16:56:45.365 DEBUG [o.a.h.c.p.RequestAddCookies]  CookieSpec selected: default
+16:56:45.376 DEBUG [o.a.h.c.p.RequestAuthCache]  Auth cache not set in the context
+16:56:45.377 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection request: [route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 0 of 2; total allocated: 0 of 20]
+16:56:45.389 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection leased: [id: 0][route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 1 of 2; total allocated: 1 of 20]
+16:56:45.390 DEBUG [o.a.h.i.e.MainClientExec]  Opening connection {}->http://192.168.5.77:8540
+16:56:45.392 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connecting to /192.168.5.77:8540
+16:56:45.394 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connection established 192.168.5.1:57263<->192.168.5.77:8540
+16:56:45.394 DEBUG [o.a.h.i.e.MainClientExec]  Executing request POST / HTTP/1.1
+16:56:45.394 DEBUG [o.a.h.i.e.MainClientExec]  Target auth state: UNCHALLENGED
+16:56:45.394 DEBUG [o.a.h.i.e.MainClientExec]  Proxy auth state: UNCHALLENGED
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> POST / HTTP/1.1
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept: application/json
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-type: application/json;charset=UTF-8
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-Length: 80
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Host: 192.168.5.77:8540
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Connection: Keep-Alive
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)
+16:56:45.396 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept-Encoding: gzip,deflate
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "POST / HTTP/1.1[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept: application/json[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-type: application/json;charset=UTF-8[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-Length: 80[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Host: 192.168.5.77:8540[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "[\r][\n]"
+16:56:45.396 DEBUG [o.a.h.wire]  http-outgoing-0 >> "{"method":"eth_getBlockByNumber","id":"0","params":["0x1",true],"jsonrpc":"2.0"}"
+16:56:45.398 DEBUG [o.a.h.wire]  http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "Content-Type: application/json[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "Transfer-Encoding: chunked[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "Date: Tue, 05 Jun 2018 07:56:45 GMT[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "E90[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "{"jsonrpc":"2.0","result":{"author":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","difficulty":"0xfffffffffffffffffffffffff6e42de3","extraData":"0xd58301080b8650617269747986312e32352e30826c69","gasLimit":"0xea99","gasUsed":"0xa410","hash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","miner":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","number":"0x1","parentHash":"0xe9eed6525b197820b5d0af33938e14fc7aaefbf53b1ae8165362ee80ef01c0da","receiptsRoot":"0xd6ff63c0a312f30455478dcb1de937ea27034c8de42fcf11fa2cf969b1d7634e","sealFields":["0x84091bd21c","0xb841ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500"],"sha3Uncles":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347","signature":"ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500","size":"0x30e","stateRoot":"0x466f275b0687af0319717d19f680b5c8d54216eab039cb60a9cec40ad7733679","step":"152818204","timestamp":"0x5b163518","totalDifficulty":"0xfffffffffffffffffffffffff6e62de3","transactions":[{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x00cc5a03e7166baa2df1d449430581d92abb0a1e","gas":"0x5208","gasPrice":"0x0","hash":"0x61805560af70a9531ff9316662f9c9aed573a3bed8c6f009c61e03ca87595b07","input":"0x","nonce":"0x0","publicKey":"0x8f2053a8d69a36903c4c2423bb99b8365aff9e74cd7740af04b0a969a2d5b45882f26fac9dc1a26fd5b3448ec76da8fdecb1e0cb048f1f2d7d08d44daef8086d","r":"0xbc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388","raw":"0xf8648080825208940046f91449e4b696d48c9dd10703cb589649c265830116398082466aa0bc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388a01ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","s":"0x1ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","standardV":"0x1","to":"0x0046f91449e4b696d48c9dd10703cb589649c265","transactionIndex":"0x0","v":"0x466a","value":"0x11639"},{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x0094bc2c3b585928dfeaf85e96ba57773c0673c1","gas":"0x5208","gasPrice":"0x0","hash":"0x1e5e50592c7e7ab63e49125cdedddb5b072b91c85cc19d895aaa8eddd07d21f6","input":"0x","nonce":"0x0","publicKey":"0x857b8188f02d8bc2d701255f3f51296fd31e1acc1c341d49a365aa4e2c3308798bea01a90d29553ba0b8cabcd08eb5f8e403c820abde93de4f6b1f07b7136e16","r":"0xcf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8","raw":"0xf8648080825208940008fba8d298de8f6ea7385d447f4d3252dc0880830f071d80824669a00cf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8a03aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","s":"0x3aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","standardV":"0x0","to":"0x0008fba8d298de8f6ea7385d447f4d3252dc0880","transactionIndex":"0x1","v":"0x4669","value":"0xf071d"}],"transactionsRoot":"0x1ff6bfbb37b922206d7cca598301ac130a724b6e3c4be825f7d8a37f2675ae4c","uncles":[]},"id":0}[\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "0[\r][\n]"
+16:56:45.399 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:56:45.403 DEBUG [o.a.h.headers]  http-outgoing-0 << HTTP/1.1 200 OK
+16:56:45.403 DEBUG [o.a.h.headers]  http-outgoing-0 << Content-Type: application/json
+16:56:45.403 DEBUG [o.a.h.headers]  http-outgoing-0 << Transfer-Encoding: chunked
+16:56:45.403 DEBUG [o.a.h.headers]  http-outgoing-0 << Date: Tue, 05 Jun 2018 07:56:45 GMT
+16:56:45.411 DEBUG [o.a.h.i.e.MainClientExec]  Connection can be kept alive indefinitely
+16:56:45.414 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:56:45.414 DEBUG [o.a.h.i.c.DefaultManagedHttpClientConnection]  http-outgoing-0: Close connection
+16:56:45.414 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
+16:57:21.759 DEBUG [o.a.h.c.p.RequestAddCookies]  CookieSpec selected: default
+16:57:21.767 DEBUG [o.a.h.c.p.RequestAuthCache]  Auth cache not set in the context
+16:57:21.768 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection request: [route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 0 of 2; total allocated: 0 of 20]
+16:57:21.777 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection leased: [id: 0][route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 1 of 2; total allocated: 1 of 20]
+16:57:21.779 DEBUG [o.a.h.i.e.MainClientExec]  Opening connection {}->http://192.168.5.77:8540
+16:57:21.780 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connecting to /192.168.5.77:8540
+16:57:21.782 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connection established 192.168.5.1:57272<->192.168.5.77:8540
+16:57:21.782 DEBUG [o.a.h.i.e.MainClientExec]  Executing request POST / HTTP/1.1
+16:57:21.782 DEBUG [o.a.h.i.e.MainClientExec]  Target auth state: UNCHALLENGED
+16:57:21.782 DEBUG [o.a.h.i.e.MainClientExec]  Proxy auth state: UNCHALLENGED
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> POST / HTTP/1.1
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept: application/json
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-type: application/json;charset=UTF-8
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-Length: 80
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Host: 192.168.5.77:8540
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Connection: Keep-Alive
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)
+16:57:21.783 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept-Encoding: gzip,deflate
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "POST / HTTP/1.1[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept: application/json[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-type: application/json;charset=UTF-8[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-Length: 80[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Host: 192.168.5.77:8540[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "[\r][\n]"
+16:57:21.784 DEBUG [o.a.h.wire]  http-outgoing-0 >> "{"method":"eth_getBlockByNumber","id":"0","params":["0x1",true],"jsonrpc":"2.0"}"
+16:57:21.785 DEBUG [o.a.h.wire]  http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+16:57:21.785 DEBUG [o.a.h.wire]  http-outgoing-0 << "Content-Type: application/json[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "Transfer-Encoding: chunked[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "Date: Tue, 05 Jun 2018 07:57:21 GMT[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "E90[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "{"jsonrpc":"2.0","result":{"author":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","difficulty":"0xfffffffffffffffffffffffff6e42de3","extraData":"0xd58301080b8650617269747986312e32352e30826c69","gasLimit":"0xea99","gasUsed":"0xa410","hash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","miner":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","number":"0x1","parentHash":"0xe9eed6525b197820b5d0af33938e14fc7aaefbf53b1ae8165362ee80ef01c0da","receiptsRoot":"0xd6ff63c0a312f30455478dcb1de937ea27034c8de42fcf11fa2cf969b1d7634e","sealFields":["0x84091bd21c","0xb841ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500"],"sha3Uncles":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347","signature":"ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500","size":"0x30e","stateRoot":"0x466f275b0687af0319717d19f680b5c8d54216eab039cb60a9cec40ad7733679","step":"152818204","timestamp":"0x5b163518","totalDifficulty":"0xfffffffffffffffffffffffff6e62de3","transactions":[{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x00cc5a03e7166baa2df1d449430581d92abb0a1e","gas":"0x5208","gasPrice":"0x0","hash":"0x61805560af70a9531ff9316662f9c9aed573a3bed8c6f009c61e03ca87595b07","input":"0x","nonce":"0x0","publicKey":"0x8f2053a8d69a36903c4c2423bb99b8365aff9e74cd7740af04b0a969a2d5b45882f26fac9dc1a26fd5b3448ec76da8fdecb1e0cb048f1f2d7d08d44daef8086d","r":"0xbc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388","raw":"0xf8648080825208940046f91449e4b696d48c9dd10703cb589649c265830116398082466aa0bc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388a01ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","s":"0x1ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","standardV":"0x1","to":"0x0046f91449e4b696d48c9dd10703cb589649c265","transactionIndex":"0x0","v":"0x466a","value":"0x11639"},{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x0094bc2c3b585928dfeaf85e96ba57773c0673c1","gas":"0x5208","gasPrice":"0x0","hash":"0x1e5e50592c7e7ab63e49125cdedddb5b072b91c85cc19d895aaa8eddd07d21f6","input":"0x","nonce":"0x0","publicKey":"0x857b8188f02d8bc2d701255f3f51296fd31e1acc1c341d49a365aa4e2c3308798bea01a90d29553ba0b8cabcd08eb5f8e403c820abde93de4f6b1f07b7136e16","r":"0xcf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8","raw":"0xf8648080825208940008fba8d298de8f6ea7385d447f4d3252dc0880830f071d80824669a00cf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8a03aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","s":"0x3aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","standardV":"0x0","to":"0x0008fba8d298de8f6ea7385d447f4d3252dc0880","transactionIndex":"0x1","v":"0x4669","value":"0xf071d"}],"transactionsRoot":"0x1ff6bfbb37b922206d7cca598301ac130a724b6e3c4be825f7d8a37f2675ae4c","uncles":[]},"id":0}[\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "0[\r][\n]"
+16:57:21.786 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:57:21.789 DEBUG [o.a.h.headers]  http-outgoing-0 << HTTP/1.1 200 OK
+16:57:21.789 DEBUG [o.a.h.headers]  http-outgoing-0 << Content-Type: application/json
+16:57:21.789 DEBUG [o.a.h.headers]  http-outgoing-0 << Transfer-Encoding: chunked
+16:57:21.789 DEBUG [o.a.h.headers]  http-outgoing-0 << Date: Tue, 05 Jun 2018 07:57:21 GMT
+16:57:21.795 DEBUG [o.a.h.i.e.MainClientExec]  Connection can be kept alive indefinitely
+16:57:21.798 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:57:21.798 DEBUG [o.a.h.i.c.DefaultManagedHttpClientConnection]  http-outgoing-0: Close connection
+16:57:21.798 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
+16:58:28.427 DEBUG [o.a.h.c.p.RequestAddCookies]  CookieSpec selected: default
+16:58:28.439 DEBUG [o.a.h.c.p.RequestAuthCache]  Auth cache not set in the context
+16:58:28.440 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection request: [route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 0 of 2; total allocated: 0 of 20]
+16:58:28.449 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection leased: [id: 0][route: {}->http://192.168.5.77:8540][total kept alive: 0; route allocated: 1 of 2; total allocated: 1 of 20]
+16:58:28.450 DEBUG [o.a.h.i.e.MainClientExec]  Opening connection {}->http://192.168.5.77:8540
+16:58:28.452 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connecting to /192.168.5.77:8540
+16:58:28.453 DEBUG [o.a.h.i.c.DefaultHttpClientConnectionOperator]  Connection established 192.168.5.1:57336<->192.168.5.77:8540
+16:58:28.453 DEBUG [o.a.h.i.e.MainClientExec]  Executing request POST / HTTP/1.1
+16:58:28.453 DEBUG [o.a.h.i.e.MainClientExec]  Target auth state: UNCHALLENGED
+16:58:28.454 DEBUG [o.a.h.i.e.MainClientExec]  Proxy auth state: UNCHALLENGED
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> POST / HTTP/1.1
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept: application/json
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-type: application/json;charset=UTF-8
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Content-Length: 80
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Host: 192.168.5.77:8540
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Connection: Keep-Alive
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)
+16:58:28.455 DEBUG [o.a.h.headers]  http-outgoing-0 >> Accept-Encoding: gzip,deflate
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "POST / HTTP/1.1[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept: application/json[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-type: application/json;charset=UTF-8[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Content-Length: 80[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Host: 192.168.5.77:8540[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "User-Agent: Apache-HttpClient/4.5.5 (Java/1.8.0_161)[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "[\r][\n]"
+16:58:28.455 DEBUG [o.a.h.wire]  http-outgoing-0 >> "{"method":"eth_getBlockByNumber","id":"0","params":["0x1",true],"jsonrpc":"2.0"}"
+16:58:28.457 DEBUG [o.a.h.wire]  http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "Content-Type: application/json[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "Transfer-Encoding: chunked[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "Date: Tue, 05 Jun 2018 07:58:28 GMT[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "E90[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "{"jsonrpc":"2.0","result":{"author":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","difficulty":"0xfffffffffffffffffffffffff6e42de3","extraData":"0xd58301080b8650617269747986312e32352e30826c69","gasLimit":"0xea99","gasUsed":"0xa410","hash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","miner":"0x00bd138abd70e2f00903268f3db08f2d25677c9e","number":"0x1","parentHash":"0xe9eed6525b197820b5d0af33938e14fc7aaefbf53b1ae8165362ee80ef01c0da","receiptsRoot":"0xd6ff63c0a312f30455478dcb1de937ea27034c8de42fcf11fa2cf969b1d7634e","sealFields":["0x84091bd21c","0xb841ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500"],"sha3Uncles":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347","signature":"ebba56b6b03a3b24b4d0f3fe60e92bbb4838fdf850d4975b1747e0c8230669e7043cecc1b03d152354cc9a27d79c1a04c7db78999c857d0cac2b0ba3efb8e90500","size":"0x30e","stateRoot":"0x466f275b0687af0319717d19f680b5c8d54216eab039cb60a9cec40ad7733679","step":"152818204","timestamp":"0x5b163518","totalDifficulty":"0xfffffffffffffffffffffffff6e62de3","transactions":[{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x00cc5a03e7166baa2df1d449430581d92abb0a1e","gas":"0x5208","gasPrice":"0x0","hash":"0x61805560af70a9531ff9316662f9c9aed573a3bed8c6f009c61e03ca87595b07","input":"0x","nonce":"0x0","publicKey":"0x8f2053a8d69a36903c4c2423bb99b8365aff9e74cd7740af04b0a969a2d5b45882f26fac9dc1a26fd5b3448ec76da8fdecb1e0cb048f1f2d7d08d44daef8086d","r":"0xbc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388","raw":"0xf8648080825208940046f91449e4b696d48c9dd10703cb589649c265830116398082466aa0bc9a22a3595f20f90b67736c2bd9d8d80b7389c2e322ba5516b9e42ceb512388a01ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","s":"0x1ae041377353dea24d505996ce5a41f9a31dba464ec85aab6565c4da55935d36","standardV":"0x1","to":"0x0046f91449e4b696d48c9dd10703cb589649c265","transactionIndex":"0x0","v":"0x466a","value":"0x11639"},{"blockHash":"0x338432c92c7d8ead4e3ce24b3eca5f38cc1e5838bb83d8fe1fe5c62175e93fe5","blockNumber":"0x1","chainId":"0x2323","condition":null,"creates":null,"from":"0x0094bc2c3b585928dfeaf85e96ba57773c0673c1","gas":"0x5208","gasPrice":"0x0","hash":"0x1e5e50592c7e7ab63e49125cdedddb5b072b91c85cc19d895aaa8eddd07d21f6","input":"0x","nonce":"0x0","publicKey":"0x857b8188f02d8bc2d701255f3f51296fd31e1acc1c341d49a365aa4e2c3308798bea01a90d29553ba0b8cabcd08eb5f8e403c820abde93de4f6b1f07b7136e16","r":"0xcf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8","raw":"0xf8648080825208940008fba8d298de8f6ea7385d447f4d3252dc0880830f071d80824669a00cf5c7544800e798f84926872eb30d7b7c87b478e35c80679573b6c0ffd75fb8a03aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","s":"0x3aea5c501d7e21f4ecd2798bcf1fc2bcddee9528e31161e02828256a5ea62daa","standardV":"0x0","to":"0x0008fba8d298de8f6ea7385d447f4d3252dc0880","transactionIndex":"0x1","v":"0x4669","value":"0xf071d"}],"transactionsRoot":"0x1ff6bfbb37b922206d7cca598301ac130a724b6e3c4be825f7d8a37f2675ae4c","uncles":[]},"id":0}[\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "0[\r][\n]"
+16:58:28.458 DEBUG [o.a.h.wire]  http-outgoing-0 << "[\r][\n]"
+16:58:28.461 DEBUG [o.a.h.headers]  http-outgoing-0 << HTTP/1.1 200 OK
+16:58:28.461 DEBUG [o.a.h.headers]  http-outgoing-0 << Content-Type: application/json
+16:58:28.461 DEBUG [o.a.h.headers]  http-outgoing-0 << Transfer-Encoding: chunked
+16:58:28.461 DEBUG [o.a.h.headers]  http-outgoing-0 << Date: Tue, 05 Jun 2018 07:58:28 GMT
+16:58:28.466 DEBUG [o.a.h.i.e.MainClientExec]  Connection can be kept alive indefinitely
+16:58:28.469 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection [id: 0][route: {}->http://192.168.5.77:8540] can be kept alive indefinitely
+16:58:28.469 DEBUG [o.a.h.i.c.DefaultManagedHttpClientConnection]  http-outgoing-0: set socket timeout to 0
+16:58:28.469 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection released: [id: 0][route: {}->http://192.168.5.77:8540][total kept alive: 1; route allocated: 1 of 2; total allocated: 1 of 20]
+16:58:28.469 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager is shutting down
+16:58:28.470 DEBUG [o.a.h.i.c.DefaultManagedHttpClientConnection]  http-outgoing-0: Close connection
+16:58:28.470 DEBUG [o.a.h.i.c.PoolingHttpClientConnectionManager]  Connection manager shut down
