@@ -1,19 +1,20 @@
 package org.web3jtest.eth;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
+import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.EthLog.Hash;
 import org.web3j.protocol.core.methods.response.EthLog.LogResult;
+import org.web3j.protocol.http.HttpService;
 import org.web3jtest.AbstractTestRunner;
+import org.web3jtest.rpc.JsonRpcHttpService;
+import org.web3jtest.rpc.ParityJsonRpc;
 import org.web3jtest.util.GsonUtil;
 import org.web3jtest.util.LogLevelUtil;
 import org.web3jtest.util.SimpleLogger;
