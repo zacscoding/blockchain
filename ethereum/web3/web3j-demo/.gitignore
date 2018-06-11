@@ -27,4 +27,7 @@
 ### Secret text ###
 /**/ignore.txt
 
-/**/logs/**
+/logs
+
+
+
