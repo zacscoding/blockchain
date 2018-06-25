@@ -27,9 +27,9 @@ public class CompareBlocks {
 
     @Before
     public void setUp() {
-        node0 = Web3j.build(new HttpService("http://192.168.79.128:8540"));
-        node1 = Web3j.build(new HttpService("http://192.168.79.128:8541"));
-        node2 = Web3j.build(new HttpService("http://192.168.79.128:8542"));
+        node0 = Web3j.build(new HttpService("http://192.168.5.77:8540"));
+        node1 = Web3j.build(new HttpService("http://192.168.5.77:8541"));
+        //node2 = Web3j.build(new HttpService("http://192.168.79.128:8542"));
         LogLevelUtil.setInfo();
     }
 
@@ -41,7 +41,7 @@ public class CompareBlocks {
 
         for (int i = 0; i < size; i++) {
             Block b1 = node0.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true).send().getBlock();
-            Block b2 = node2.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true).send().getBlock();
+            Block b2 = node1.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true).send().getBlock();
             if (!CompareUtil.equals(b1, b2)) {
                 SimpleLogger.println("## Node 1 ##");
                 SimpleLogger.printJSONPretty(b1);

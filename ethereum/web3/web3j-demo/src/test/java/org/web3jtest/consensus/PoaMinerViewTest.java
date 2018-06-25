@@ -1,5 +1,9 @@
 package org.web3jtest.consensus;
 
+import static org.junit.Assert.assertTrue;
+
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.methods.response.EthBlock.Block;
+import org.web3j.protocol.http.HttpService;
 import org.web3jtest.rpc.JsonRpcHttpService;
 import org.web3jtest.rpc.ParityJsonRpc;
 import org.web3jtest.util.SimpleLogger;
@@ -19,7 +27,7 @@ import org.web3jtest.util.SimpleLogger;
  * @GitHub : https://github.com/zacscoding
  */
 public class PoaMinerViewTest {
-    String uri = "http://192.168.5.50:8540/";
+    String uri = "http://192.168.5.77:8540/";
     Map<String, String> miners;
 
     @Before
@@ -27,7 +35,6 @@ public class PoaMinerViewTest {
         miners = new HashMap<>();
         miners.put("0x00bd138abd70e2f00903268f3db08f2d25677c9e", "node0");
         miners.put("0x00aa39d30f0d20ff03a22ccfc30b7efbfca597c2", "node1");
-        miners.put("0x002e28950558fbede1a9675cb113f0bd20912019", "node2");
     }
 
     /*
@@ -75,6 +82,17 @@ public class PoaMinerViewTest {
             start += stepDuration;
         }
     }
+
+    @Test
+    public void test() {
+        long timestamp = 1529320639;
+        // double divided = ((double) timestamp) / 10;
+        double divided = (double) timestamp / 10;
+        System.out.println(Math.round(divided));
+        System.out.println(new BigDecimal(divided).toPlainString());
+    }
+
+
 
     private void displayBlockMiner(String blockResult) {
         Map<String, Object> map = (Map<String, Object>) JsonRpcHttpService.extractResult(blockResult);

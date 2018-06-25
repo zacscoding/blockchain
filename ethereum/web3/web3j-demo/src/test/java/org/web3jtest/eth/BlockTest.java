@@ -61,13 +61,16 @@ public class BlockTest extends AbstractTestRunner {
     @Test
     public void checkBlocksFromTo() throws Exception {
         LogLevelUtil.setInfo();
-        BigInteger lastRangeNumber = BigInteger.valueOf(8L);
+        BigInteger lastRangeNumber = BigInteger.valueOf(7L);
+        lastRangeNumber = web3j.ethBlockNumber().send().getBlockNumber();
         BigInteger startRangeNumber = BigInteger.valueOf(-1L);
         int size = lastRangeNumber.subtract(startRangeNumber).intValue();
 
         for (int i = 0; i < size; i++) {
             Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true).send().getBlock();
-            SimpleLogger.printJSONPretty(block);
+            // SimpleLogger.println("{} => {}", block.getNumber().toString(10), block.getUncles().size());
+            SimpleLogger.println("{} | {} => {}", block.getNumber(), block.getMiner(), block.getDifficulty().toString(10));
+            //SimpleLogger.printJSONPretty(block);
         }
     }
 
