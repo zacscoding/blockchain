@@ -19,7 +19,8 @@ public class ConnectParityNodes {
     @Before
     public void setUp() {
         urls = new String[] {
-            "http://192.168.5.77:8540"
+            //"http://192.168.5.77:8540"
+            "http://192.168.79.128:8540"
         };
     }
 
