@@ -155,4 +155,16 @@ public class FilterTest extends AbstractTestRunner {
         System.out.println("## End ##");
         subscription.unsubscribe();
     }
+
+    @Test
+    public void pendingTxTest() throws Exception {
+        PendingTransactionFilter pendingTxFilter = new PendingTransactionFilter(web3j, s -> {
+            System.out.println("## Receive pending tx : " + s);
+        });
+
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
+        pendingTxFilter.run(service, 10L);
+
+        TimeUnit.MINUTES.sleep(2L);
+    }
 }

@@ -147,4 +147,19 @@ public class BlockTest extends AbstractTestRunner {
             }*/
         });
     }
+
+    @Test
+    public void displayBlocks() throws Exception {
+        BigInteger start = BigInteger.ZERO;
+        BigInteger last = null;
+        if (last == null) {
+            last = web3j.ethBlockNumber().send().getBlockNumber();
+        }
+
+        while (start.compareTo(last) <= 0) {
+            Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(start), true).send().getBlock();
+            SimpleLogger.printJSONPretty(block);
+            start = start.add(BigInteger.ONE);
+        }
+    }
 }
