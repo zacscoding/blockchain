@@ -2,13 +2,10 @@ package org.web3jtest.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.PrintStream;
 
-/**
- * @author zacconding
- * @Date 2018-05-01
- * @GitHub : https://github.com/zacscoding
- */
 public class GsonUtil {
 
     public static String toString(Object inst) {
@@ -48,6 +45,17 @@ public class GsonUtil {
         }
 
         ps.println(toStringPretty(inst));
+    }
+
+    public static String  jsonStringToPretty(String jsonString) {
+        if (jsonString == null || jsonString.length() == 0) {
+            return "{}";
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(jsonString).getAsJsonObject();
+
+        return GsonFactory.createPrettyGson().toJson(jsonObject);
     }
 
     public static class GsonFactory {

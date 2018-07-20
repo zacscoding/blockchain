@@ -6,10 +6,11 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import okhttp3.WebSocket;
+import java.util.Scanner;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.junit.Test;
+import org.web3jtest.util.GsonUtil;
 import org.web3jtest.util.SimpleLogger;
 
 /**
@@ -21,15 +22,11 @@ public class ConnTest {
 
     @Test
     public void test() throws Exception {
-        String uri  = "ws://192.168.79.128:8450";
+        String uri  = "ws://192.168.5.77:8450";
         WebSocketClient client = new WebSocketClient(new URI(uri)) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
-                SimpleLogger.build()
-                            .appendln("## onOpen ##")
-                            .appendln("## status message : " + serverHandshake.getHttpStatusMessage())
-                            .appendln("## status : " + serverHandshake.getHttpStatus())
-                            .flush();
+                SimpleLogger.println("## onOpen : " + GsonUtil.toString(serverHandshake));
             }
 
             @Override
@@ -52,15 +49,27 @@ public class ConnTest {
         Thread.sleep(10 * 1000L);
         assertTrue(client.isOpen());
 
+        // send new block number
         JSONRPC2Request request = new JSONRPC2Request("parity_subscribe", "1");
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
         params.add("eth_blockNumber");
-        List<Object> subParams = new ArrayList<Object>();
+        List<Object> subParams = new ArrayList<>();
         params.add(subParams);
         request.setPositionalParams(params);
 
         client.send(request.toJSONString());
-        Thread.sleep(10 * 1000L);
+
+        // send pending tx subscribe
+
+        request = new JSONRPC2Request("parity_subscribe", "1");
+        params = new ArrayList<>();
+        params.add("eth_newPendingTransaction");
+        subParams = new ArrayList<>();
+        params.add(subParams);
+        request.setPositionalParams(params);
+
+        client.send(request.toJSONString());
+        new Scanner(System.in).nextLine(); // Don't close immediately
     }
 }
 
