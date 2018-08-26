@@ -52,9 +52,10 @@ $ source ~/.bash_profile
 [app@localhost bin]$ ls
 abigen  bootnode  clef  ethkey  evm  examples  faucet  geth  p2psim  puppeth  rlpdump  simulations  swarm  swarm-smoke  wnode
 
-[app@localhost bin]$ vi ~/.bash_profile
+[app@localhost bin]$ vi ~/.bashrc
 export GETHPATH="$HOME/go-ethereum/build"  
 PATH=$PATH:$GETHPATH/bin
+[app@localhost bin]$ source ~/.bashrc
 ```  
 
 #### 노드 데이터 디렉터리 생성  
@@ -219,15 +220,25 @@ INFO [08-25|23:17:38.078] UDP listener up                          self=enode://
 
 
 ```
-[app@localhost clique-test]$ geth --datadir node1/ --ipcpath node1/node1.ipc --syncmode 'full' --port 30311 --rpc --rpcaddr 'localhost' --rpcport 8501 --rpcapi 'personal,db,eth,net,web3,txpool,miner' --bootnodes 'enode://fc8b830dd799aa0ea409bd6735170fedcb6ad323c2fdf82497636bd7eaf398f37e8610b0b1edd136a756a593a732710940c1fa460140f72ee5475f257c7df207@127.0.0.1:30310' --networkid 1234 --gasprice '1' -unlock '0xfa01bfd41c4672b531e0dfbce52d1680a87d5fb0' --password node1/password.txt --mine
+[app@localhost clique-test]$ geth --datadir node2/ --ipcpath node2/node2.ipc --syncmode 'full' --port 30312 --rpc --rpcaddr 'localhost' --rpcport 8502 --rpcapi 'personal,db,eth,net,web3,txpool,miner' --bootnodes 'enode://fc8b830dd799aa0ea409bd6735170fedcb6ad323c2fdf82497636bd7eaf398f37e8610b0b1edd136a756a593a732710940c1fa460140f72ee5475f257c7df207@127.0.0.1:30310' --networkid 1234 --gasprice '1' -unlock '0x2d5fde2bae5ee752eed7b0f1a990760c93bd1b27' --password node2/password.txt --mine
 ```
 
-> Node1  
+> Node3  
 
 
 ```
-[app@localhost clique-test]$ geth --datadir node1/ --ipcpath node1/node1.ipc --syncmode 'full' --port 30311 --rpc --rpcaddr 'localhost' --rpcport 8501 --rpcapi 'personal,db,eth,net,web3,txpool,miner' --bootnodes 'enode://fc8b830dd799aa0ea409bd6735170fedcb6ad323c2fdf82497636bd7eaf398f37e8610b0b1edd136a756a593a732710940c1fa460140f72ee5475f257c7df207@127.0.0.1:30310' --networkid 1234 --gasprice '1' -unlock '0xfa01bfd41c4672b531e0dfbce52d1680a87d5fb0' --password node1/password.txt --mine
+[app@localhost clique-test]$ geth --datadir node3/ --ipcpath node1/node1.ipc --syncmode 'full' --port 30313 --rpc --rpcaddr 'localhost' --rpcport 8503 --rpcapi 'personal,db,eth,net,web3,txpool,miner' --bootnodes 'enode://fc8b830dd799aa0ea409bd6735170fedcb6ad323c2fdf82497636bd7eaf398f37e8610b0b1edd136a756a593a732710940c1fa460140f72ee5475f257c7df207@127.0.0.1:30310' --networkid 1234 --gasprice '1' -unlock '0xafda0df71a31f392dae6f07a1b2a911006e05971' --password node3/password.txt --mine
 ```  
+
+
+#### dumpconfig 를 이용한 이더리움 노드 시작  
+
+```
+[app@localhost clique-test]$ geth --datadir node1/ --ipcpath node1/node1.ipc --syncmode 'full' --port 30311 --rpc --rpcaddr 'localhost' --rpcport 8501 --rpcapi 'personal,db,eth,net,web3,txpool,miner' --bootnodes 'enode://fc8b830dd799aa0ea409bd6735170fedcb6ad323c2fdf82497636bd7eaf398f37e8610b0b1edd136a756a593a732710940c1fa460140f72ee5475f257c7df207@127.0.0.1:30310' --networkid 1234 --gasprice '1' -unlock '0xfa01bfd41c4672b531e0dfbce52d1680a87d5fb0' --password node1/password.txt --mine dumpconfig > node1.toml
+INFO [08-26|16:47:17.377] Maximum peer count                       ETH=25 LES=0 total=25
+[app@localhost clique-test]$ geth --config node1.toml
+```  
+
 
 #### 노드 확인  
 
