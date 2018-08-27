@@ -295,3 +295,12 @@ at block: 16 (Sat, 25 Aug 2018 23:33:26 KST)
 > eth.blockNumber
 29
 ```
+
+---  
+
+## 윈도우 미스트 실행  
+
+
+```
+dir > & 'C:\Program Files\Mist\Mist.exe' --rpc \\.\pipe\node1/node1.ipc
+```
