@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,21 +29,22 @@ public class FilterTest extends AbstractTestRunner {
 
     @Test
     public void blockFilter() throws Exception {
-        LogLevelUtil.setInfo();
+        CountDownLatch countDownLatch = new CountDownLatch(5);
+        // LogLevelUtil.setInfo();
         System.out.println("## Start to block filter ##");
-
         BlockFilter filter = new BlockFilter(web3j, s -> {
             try {
                 Block block = web3j.ethGetBlockByHash(s, false).send().getBlock();
                 SimpleLogger.println("## Receive new block. num : {}, hash : {}", block.getNumber(), block.getHash());
+                countDownLatch.countDown();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        filter.run(service, 500L);
-
-        TimeUnit.MINUTES.sleep(2);
+        filter.run(service, 5000L);
+        // TimeUnit.MINUTES.sleep(2);
+        countDownLatch.await();
         System.out.println("## End ##");
     }
 

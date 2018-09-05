@@ -28,9 +28,17 @@ public class ConnectParityNodes {
     @Before
     public void setUp() {
         urls = new String[] {
-            //"http://192.168.5.77:8540"
+            "http://192.168.5.77:8540",
             "http://192.168.79.128:8540"
         };
+    }
+
+    @Test
+    public void test() throws Exception {
+        String enode = (String) JsonRpcHttpService.requestAndGetResult(urls[0], ParityJsonRpc.parity_enode, null);
+        Boolean result = (Boolean) JsonRpcHttpService.requestAndGetResult(urls[1], ParityJsonRpc.parity_addReservedPeer, null, enode);
+        System.out.println(enode);
+        System.out.println(result);
     }
 
     @Test

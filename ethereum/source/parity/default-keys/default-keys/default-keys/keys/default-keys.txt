@@ -1,0 +1,63 @@
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node0", "node0"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00bd138abd70e2f00903268f3db08f2d25677c9e
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node1", "node1"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00aa39d30f0d20ff03a22ccfc30b7efbfca597c2
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node2", "node2"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x002e28950558fbede1a9675cb113f0bd20912019
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node3", "node3"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00a94ac799442fb13de8302026fd03068ba6a428
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node4", "node4"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00d4f0e12020c15487b2a525abcb27de647c12de
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["node5", "node5"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x001f477a48a01d2561e324f874782b2dd8167772
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user0", "user0"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0002cc6a7cec1276e76a76385ad78a76e619dc49
+
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user1", "user1"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00d695cd9b0ff4edc8ce55b493aec495b597e235
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user2", "user2"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x001ca0bb54fcc1d736ccd820f14316dedaafd772
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user3", "user3"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00cb25f6fd16a52e24edd2c8fd62071dc29a035c
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user4", "user4"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0046f91449e4b696d48c9dd10703cb589649c265
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user5", "user5"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x00cc5a03e7166baa2df1d449430581d92abb0a1e
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user6", "user6"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0095e961b3a00f882326bbc8f0a469e5b56e858a
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user7", "user7"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0008fba8d298de8f6ea7385d447f4d3252dc0880
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user8", "user8"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0094bc2c3b585928dfeaf85e96ba57773c0673c1
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user9", "user9"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x0002851146112cef5d360033758c470689b72ea7
+
+
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user10", "user10"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+0x002227d6a35ed31076546159061bd5d3fefe9f0a

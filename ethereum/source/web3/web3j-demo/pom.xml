@@ -66,14 +66,14 @@
         <dependency>
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
-            <version>3.4.0</version>
+            <version>3.5.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.web3j/crypto -->
         <dependency>
             <groupId>org.web3j</groupId>
             <artifactId>crypto</artifactId>
-            <version>3.4.0</version>
+            <version>3.5.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.web3j</groupId>
             <artifactId>utils</artifactId>
-            <version>3.4.0</version>
+            <version>3.5.0</version>
         </dependency>
 
         <dependency>
