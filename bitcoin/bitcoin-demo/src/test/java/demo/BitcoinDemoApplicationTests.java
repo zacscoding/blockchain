@@ -12,5 +12,4 @@ public class BitcoinDemoApplicationTests {
     @Test
     public void contextLoads() {
     }
-
 }

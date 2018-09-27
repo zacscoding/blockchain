@@ -56,7 +56,7 @@ autoreconf: automake failed with exit status: 1
 $ sudo apt-get install libtool
 ```  
 
-> Agent autogen.sh  
+> autogen.sh  
 
 ```
 $ ./autogen.sh
@@ -148,7 +148,7 @@ configure: error: PKG_PROG_PKG_CONFIG macro not found. Please install pkg-config
 > install libdb  
 
 ```
-$ sudo apt-install pkg-config
+$ sudo apt-get install pkg-config
 $ sudo add-apt-repository ppa:bitcoin/bitcoin
 $ sudo apt-get update
 $ sudo apt-get install -y libdb4.8-dev libdb4.8++-dev
@@ -345,6 +345,7 @@ bitcoind -conf=<file> -datadir=<dir> -daemon
 $ bitcoind -testnet -conf=/home/app/.bitcoin/testnet3/bitcoin.conf -datadir=/home/app/.bitcoin -daemon
 $ bitcoind -testnet -conf=/home/app/.bitcoin/bitcoin.conf -datadir=/home/app/.bitcoin -daemon
 $ bitcoind -testnet -conf=/home/app/.bitcoin/testnet3/bitcoin.conf -datadir=/home/app/.bitcoin -daemon
+$ bitcoind -testnet -txindex=1 -reindex -conf=/home/app/.bitcoin/bitcoin.conf -datadir=/home/app/.bitcoin -daemon
 ```
 
 ```
@@ -381,11 +382,11 @@ app@ubuntu:~/.bitcoin/testnet3$ netstat -anp | grep 1314
 - https://steemkr.com/kr-dev/@nhj12311/linux-ubuntu
 - https://bitcoin.org/en/developer-examples#testing-applications
 
-```  
-
 ---  
 
 ### Errors
+
+> Check cookie auth
 
 ```
 2018-09-05 08:10:09 Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcuser for rpcauth auth generation.

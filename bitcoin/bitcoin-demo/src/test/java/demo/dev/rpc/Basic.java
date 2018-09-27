@@ -1,4 +1,4 @@
-package demo.dev;
+package demo.dev.rpc;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -17,13 +18,26 @@ import org.junit.Test;
  */
 public class Basic {
 
+    String host;
+    int port;
+    String username;
+    String password;
+
+    @Before
+    public void setUp() {
+        host = "192.168.5.78";
+        port = 18332;
+        username = "bitcoinrpc";
+        password = "1db251a768876287efe29e3c33ae7660";
+    }
+
     @Test
-    public void test() throws Exception {
+    public void defaultRequest() throws Exception {
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        httpclient.getCredentialsProvider().setCredentials(new AuthScope("192.168.5.78", 18332), new UsernamePasswordCredentials("bitcoinrpc", "1db251a768876287efe29e3c33ae7660"));
-        String jsonBody  = "{\"jsonrpc\": \"1.0\", \"id\":\"1\", \"method\": \"getblockcount\", \"params\": [] }";
+        httpclient.getCredentialsProvider().setCredentials(new AuthScope(host, port), new UsernamePasswordCredentials(username, password));
+        String jsonBody = "{\"jsonrpc\": \"1.0\", \"id\":\"1\", \"method\": \"getblockcount\", \"params\": [] }";
         StringEntity myEntity = new StringEntity(jsonBody);
-        HttpPost httppost = new HttpPost("http://192.168.5.78:18332");
+        HttpPost httppost = new HttpPost("http://" + host + ":" + port);
         httppost.setEntity(myEntity);
         HttpResponse response = httpclient.execute(httppost);
         HttpEntity entity = response.getEntity();
