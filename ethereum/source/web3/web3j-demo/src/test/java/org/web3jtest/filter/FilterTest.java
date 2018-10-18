@@ -1,8 +1,8 @@
 package org.web3jtest.filter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -10,10 +10,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.filters.BlockFilter;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3jtest.AbstractTestRunner;
 import org.web3jtest.util.LogLevelUtil;
@@ -26,6 +29,8 @@ import rx.Subscription;
  * @GitHub : https://github.com/zacscoding
  */
 public class FilterTest extends AbstractTestRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(FilterTest.class);
 
     @Test
     public void blockFilter() throws Exception {
@@ -69,6 +74,35 @@ public class FilterTest extends AbstractTestRunner {
         System.out.println("## End ##");
     }
 
+    @Test
+    public void ethFilter() throws Exception {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        String contractAddr = "0x6bed69bbf014a313dd548a53d74e91844bc38cb4";
+        EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, contractAddr);
+
+        Subscription subscription = web3j.ethLogObservable(filter).subscribe((log -> {
+            StringBuilder topics = new StringBuilder();
+            for (String topic : log.getTopics()) {
+                topics.append(topic).append(" ");
+            }
+
+            StringBuilder datas = new StringBuilder();
+            String data = log.getData().substring(2);
+
+            for (int i = 0; i + 64 <= data.length(); i += 64) {
+                datas.append(data.substring(i, i+64)).append("\n");
+            }
+
+            logger.info("log.getAddress() : {}\nlog.getTopics() : {}\nlog.getData() : {}", log.getAddress(), topics.toString(), log.getData());
+            logger.info("data :: \n" + datas.toString());
+            logger.info("--------------------------------------------------------------------------");
+            countDownLatch.countDown();
+        }), error -> error.printStackTrace());
+
+        subscription.unsubscribe();
+    }
+
     private ReentrantLock lock = new ReentrantLock();
 
     @Test
@@ -107,7 +141,7 @@ public class FilterTest extends AbstractTestRunner {
                         }
                     });
 
-                    for(String remove : willRemoved) {
+                    for (String remove : willRemoved) {
                         pendingSets.remove(remove);
                     }
 
