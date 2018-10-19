@@ -2,7 +2,12 @@ package org.web3jtest.wallet;
 
 import static org.web3j.crypto.Hash.sha256;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import org.ethereum.crypto.ECKey;
 import org.junit.Test;
 import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
@@ -12,8 +17,8 @@ import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.Wallet;
 import org.web3j.crypto.WalletFile;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.utils.Numeric;
 import org.web3jtest.util.GsonUtil;
-import org.web3jtest.util.SimpleLogger;
 
 /**
  * @author zacconding
@@ -58,6 +63,27 @@ public class WalletTest {
         Credentials credentials = Credentials.create(ECKeyPair.create(sha256(seed)));
 
         System.out.println(credentials.getAddress());
+    }
+
+    @Test
+    public void loadParityContent() throws Exception {
+        String content = "{\"id\":\"06013340-6068-e53d-b2c7-d699e43bb62d\",\"version\":3,\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"3d5bd1b8fcfaebc021f821acea788438\"},\"ciphertext\":\"e094b1037729fcabfb1ae95242ee768cba1dd761cb613447ae6b872c9b5ecee4\",\"kdf\":\"pbkdf2\",\"kdfparams\":{\"c\":10240,\"dklen\":32,\"prf\":\"hmac-sha256\",\"salt\":\"c961a99a534b81a5a5e53835af592dcee70f89a36446bd769b4900a12e35cc09\"},\"mac\":\"ef5b1c8a535ccc55a89bf308ccd8d16f215f952d8d6e9314e8fc5df26430e229\"},\"address\":\"00d695cd9b0ff4edc8ce55b493aec495b597e235\",\"name\":\"\",\"meta\":\"{}\"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.configure(Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        try {
+            WalletFile walletFile = objectMapper.readValue(content, WalletFile.class);
+            Credentials credentials = Credentials.create(Wallet.decrypt("user1", walletFile));
+            System.out.println("Addr : " + credentials.getAddress());
+            System.out.println("Private key : " + credentials.getEcKeyPair().getPrivateKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ECKey key = new ECKey();
 
     }
 }
