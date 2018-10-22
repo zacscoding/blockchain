@@ -1,9 +1,11 @@
 package org.web3jtest.filter;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -13,6 +15,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.filters.BlockFilter;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
@@ -31,7 +40,9 @@ import rx.Subscription;
 public class FilterTest extends AbstractTestRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(FilterTest.class);
+    private ReentrantLock lock = new ReentrantLock();
 
+    // block event filter
     @Test
     public void blockFilter() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(5);
@@ -53,6 +64,7 @@ public class FilterTest extends AbstractTestRunner {
         System.out.println("## End ##");
     }
 
+    // pending tx event filter
     @Test
     public void pendingTxFilter() throws Exception {
         LogLevelUtil.setInfo();
@@ -74,36 +86,64 @@ public class FilterTest extends AbstractTestRunner {
         System.out.println("## End ##");
     }
 
+    // smart contract event filter
     @Test
     public void ethFilter() throws Exception {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
+        CountDownLatch countDownLatch = new CountDownLatch(3);
 
-        String contractAddr = "0x6bed69bbf014a313dd548a53d74e91844bc38cb4";
+        String contractAddr = "0x61e205daf693c5e5fd61e906c1a6e1d17e17af6c";
         EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, contractAddr);
+
+        Map<String, Event> eventMap = new HashMap<>();
+        Event changeUserEvent = new Event("ChangeUserEvent",
+            Arrays.asList(
+                new TypeReference<Utf8String>() {}
+                , new TypeReference<Address>() {}
+                , new TypeReference<Utf8String>() {}
+                , new TypeReference<Address>() {}
+                , new TypeReference<Utf8String>() {}
+                , new TypeReference<Utf8String>() {}
+            ));
+        eventMap.put(EventEncoder.encode(changeUserEvent), changeUserEvent);
+
+        Event changeOwnerEvent = new Event("ChangeOwnerEvent",
+            Arrays.asList(
+                new TypeReference<Utf8String>() {}
+                , new TypeReference<Address>() {}
+                , new TypeReference<Utf8String>() {}
+                , new TypeReference<Address>() {}
+            ));
+        eventMap.put(EventEncoder.encode(changeOwnerEvent), changeOwnerEvent);
+
+        Event testLogEvent = new Event("TestLog",
+            Arrays.asList(
+                new TypeReference<Address>() {}
+            ));
+        eventMap.put(EventEncoder.encode(testLogEvent), testLogEvent);
 
         Subscription subscription = web3j.ethLogObservable(filter).subscribe((log -> {
             StringBuilder topics = new StringBuilder();
+            SimpleLogger.println("## New block : {}({}) -> Tx : {}"
+                , log.getBlockNumber().toString(16), log.getBlockHash(), log.getTransactionHash());
+
             for (String topic : log.getTopics()) {
-                topics.append(topic).append(" ");
+                Event event = eventMap.get(topic);
+                List<Type> results = FunctionReturnDecoder.decode(log.getData(), event.getNonIndexedParameters());
+                String title = "\t===================================" + "(" + event.getName() + ")  " + topic + "===================================";
+                String titleEnd = String.format("\t%" + title.length() + "s\n\n", "").replace(' ', '=');
+                System.out.println(title);
+                for (Type result : results) {
+                    System.out.println("\t" + result.getTypeAsString() + "\t" + result.getValue());
+                }
+                System.out.println(titleEnd);
             }
 
-            StringBuilder datas = new StringBuilder();
-            String data = log.getData().substring(2);
-
-            for (int i = 0; i + 64 <= data.length(); i += 64) {
-                datas.append(data.substring(i, i+64)).append("\n");
-            }
-
-            logger.info("log.getAddress() : {}\nlog.getTopics() : {}\nlog.getData() : {}", log.getAddress(), topics.toString(), log.getData());
-            logger.info("data :: \n" + datas.toString());
-            logger.info("--------------------------------------------------------------------------");
             countDownLatch.countDown();
         }), error -> error.printStackTrace());
 
+        countDownLatch.await();
         subscription.unsubscribe();
     }
-
-    private ReentrantLock lock = new ReentrantLock();
 
     @Test
     public void pendingTxAndNewBlockFilter() throws Exception {

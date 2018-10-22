@@ -47,7 +47,13 @@ public class Web3jTransactionTest extends AbstractTestRunner {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         String rawTx = Numeric.toHexString(signedMessage);
 
-        //EthSendTransaction txResult = web3j.ethSendRawTransaction(rawTx).send();
-        //System.out.println(txResult.getTransactionHash());
+        EthSendTransaction txResult = web3j.ethSendRawTransaction(rawTx).send();
+        System.out.println(txResult.getTransactionHash());
+    }
+
+    @Test
+    public void createTx2() throws Exception {
+        String privateKey = "";
+        Credentials credentials = Credentials.create(privateKey);
     }
 }
