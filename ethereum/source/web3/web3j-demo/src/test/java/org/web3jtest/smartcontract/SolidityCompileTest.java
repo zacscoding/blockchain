@@ -5,7 +5,12 @@ import static org.ethereum.solidity.compiler.SolidityCompiler.Options.BIN;
 import static org.ethereum.solidity.compiler.SolidityCompiler.Options.INTERFACE;
 import static org.ethereum.solidity.compiler.SolidityCompiler.Options.METADATA;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.CallTransaction.Contract;
 import org.ethereum.core.CallTransaction.Function;
@@ -14,6 +19,14 @@ import org.ethereum.core.CallTransaction.Param;
 import org.ethereum.solidity.compiler.CompilationResult;
 import org.ethereum.solidity.compiler.SolidityCompiler;
 import org.junit.Test;
+import org.spongycastle.util.encoders.Hex;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeDecoder;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.Bytes;
+import org.web3j.abi.datatypes.generated.AbiTypes;
+import org.web3j.abi.datatypes.generated.Bytes2;
+import org.web3j.utils.Numeric;
 import org.web3jtest.util.SimpleLogger;
 
 /**
@@ -86,5 +99,50 @@ public class SolidityCompileTest {
                     , i++,input.name, input.type, input.indexed, input.getType());
             }
         }
+    }
+
+    @Test
+    public void encodeConstructor() throws Exception {
+        // bytes2 : "0xaa", bool : "true"
+        String bin = "0x6080604052348015600f57600080fd5b5060405160408060ce83398101604052805160209091015160008054600160a060020a031916331790558015608a576000805460a060020a61ffff021916740100000000000000000000000000000000000000007e010000000000000000000000000000000000000000000000000000000000008504021790555b505060358060996000396000f3006080604052600080fd00a165627a7a72305820e141680af6db3da50a424971566a03dd00ac3e33c28c42c6911e98af6eaeca400029";
+        String binWithEncoded = "0x6080604052348015600f57600080fd5b5060405160408060ce83398101604052805160209091015160008054600160a060020a031916331790558015608a576000805460a060020a61ffff021916740100000000000000000000000000000000000000007e010000000000000000000000000000000000000000000000000000000000008504021790555b505060358060996000396000f3006080604052600080fd00a165627a7a72305820e141680af6db3da50a424971566a03dd00ac3e33c28c42c6911e98af6eaeca400029aa000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001";
+
+        String binWithEncodedFromWeb3j = FunctionEncoder.encodeConstructor(
+            Arrays.asList(
+                // new Bytes2(new byte[]{(byte)0xaa, 0}),
+                new Bytes2(Arrays.copyOf(new BigInteger("aa", 16).toByteArray(), 2)),
+                new Bool(true)
+            )
+        );
+
+        SimpleLogger.println("At remix \n{}\nAt web3j \n{}", binWithEncoded.substring(bin.length()), binWithEncodedFromWeb3j);
+//        result
+//        At remix
+//        aa000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+    }
+
+    @Test
+    public void bytes() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        List<String> hexValues = Arrays.asList(
+            "aa",
+            "123"
+        );
+
+        for (String hexValue : hexValues) {
+            byte[] bytes = Numeric.hexStringToByteArray(hexValue);
+            Bytes wrapper = (Bytes) AbiTypes.getType("bytes" + bytes.length).getConstructor(byte[].class).newInstance(bytes);
+            SimpleLogger.println("## Check : {} >> Bytes : {} >> wrapper : {}", hexValue, Arrays.toString(bytes), wrapper.getClass().getName());
+        }
+
+//        output
+//        ## Check : aa >> Bytes : [-86] >> wrapper : org.web3j.abi.datatypes.generated.Bytes1
+//        ## Check : 123 >> Bytes : [1, 35] >> wrapper : org.web3j.abi.datatypes.generated.Bytes2
+
+    }
+
+    @Test
+    public void biToArray() throws Exception {
+        BigInteger bi = new BigInteger("aa", 16);
+        System.out.println(Arrays.toString(bi.toByteArray()));
     }
 }
