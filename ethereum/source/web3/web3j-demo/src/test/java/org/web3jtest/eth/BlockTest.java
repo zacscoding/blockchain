@@ -80,16 +80,21 @@ public class BlockTest extends AbstractTestRunner {
         boolean complete = false;
         Block block = null;
 
-        while (!complete) {
+        System.out.println(">> Start :: " + blockNumber.toString(10));
+
+        while (!complete && blockNumber.compareTo(BigInteger.ZERO) >= 0) {
             block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(blockNumber), true).send().getBlock();
             if (block.getUncles().size() > 0) {
                 complete = true;
             }
-
             blockNumber = blockNumber.subtract(BigInteger.valueOf(1));
         }
+        if (complete) {
+            SimpleLogger.printJSONPretty(block);
+        } else {
+            System.out.println("Not exist uncles..");
+        }
 
-        SimpleLogger.printJSONPretty(block);
     }
 
     @Test

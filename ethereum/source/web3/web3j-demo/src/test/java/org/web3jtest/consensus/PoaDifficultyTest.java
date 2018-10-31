@@ -1,5 +1,6 @@
 package org.web3jtest.consensus;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import java.math.BigInteger;
 import java.util.Map;
 import org.junit.Before;
@@ -24,7 +25,8 @@ public class PoaDifficultyTest {
 
     @Before
     public void setUp() {
-        uri = "http://192.168.5.77:8540";
+        // uri = "http://192.168.5.77:8540";
+        uri = "http://192.168.5.78:8540";
         HttpService httpService = new HttpService(uri);
         web3j = Web3j.build(httpService);
     }
@@ -65,6 +67,41 @@ public class PoaDifficultyTest {
             parent = block;
             start = start.add(BigInteger.ONE);
         }
+    }
+
+    @Test
+    public void displayDifficulty() throws Exception {
+        int bestBlock = web3j.ethBlockNumber().send().getBlockNumber().intValue();
+        long parentStep = 0L;
+
+        for (int i = 0; i < bestBlock; i++) {
+            String blockNumber = "0x" + BigInteger.valueOf(i).toString(16);
+            Map<String, Object> blockMap = (Map<String, Object>) JsonRpcHttpService.requestAndGetResult(
+                uri,ParityJsonRpc.parity_getBlockHeaderByNumber, null, blockNumber);
+            BlockResult block = new BlockResult(blockMap);
+
+            BigInteger emptyStep = block.difficulty.subtract(maxValue).subtract(BigInteger.valueOf(parentStep)).add(BigInteger.valueOf(block.step));
+            BigInteger calcDiff = maxValue.add(BigInteger.valueOf(parentStep)).subtract(BigInteger.valueOf(block.step));
+
+            SimpleLogger.println("block : {} --> diff : {} | parent step : {} | current step : {} ===> empty step : {}"
+                , i, block.difficulty, parentStep, block.step, emptyStep.toString(10), calcDiff.subtract(block.difficulty));
+
+            parentStep = block.step;
+        }
+
+//        result
+//        block : 0 --> diff : 131072 | parent step : 0 | current step : 0 ===> empty step : -340282366920938463463374607431768080383
+//        block : 1 --> diff : 340282366920938463463374607430997720049 | parent step : 0 | current step : 770491406 ===> empty step : 0
+//        block : 2 --> diff : 340282366920938463463374607431768211438 | parent step : 770491406 | current step : 770491423 ===> empty step : 0
+//        block : 3 --> diff : 340282366920938463463374607431768211410 | parent step : 770491423 | current step : 770491468 ===> empty step : 0
+//        block : 4 --> diff : 340282366920938463463374607431768211438 | parent step : 770491468 | current step : 770491485 ===> empty step : 0
+//        block : 5 --> diff : 340282366920938463463374607431768211410 | parent step : 770491485 | current step : 770491530 ===> empty step : 0
+//        block : 6 --> diff : 340282366920938463463374607431768211438 | parent step : 770491530 | current step : 770491547 ===> empty step : 0
+//        block : 7 --> diff : 340282366920938463463374607431768211410 | parent step : 770491547 | current step : 770491592 ===> empty step : 0
+//        block : 8 --> diff : 340282366920938463463374607431768211438 | parent step : 770491592 | current step : 770491609 ===> empty step : 0
+//        block : 9 --> diff : 340282366920938463463374607431768211408 | parent step : 770491609 | current step : 770491656 ===> empty step : 0
+//        block : 10 --> diff : 340282366920938463463374607431768211440 | parent step : 770491656 | current step : 770491671 ===> empty step : 0
+//        block : 11 --> diff : 340282366920938463463374607431768211410 | parent step : 770491671 | current step : 770491716 ===> empty step : 0
     }
 
     private BigInteger calculateDifficulty(BlockResult parent, BlockResult block) {

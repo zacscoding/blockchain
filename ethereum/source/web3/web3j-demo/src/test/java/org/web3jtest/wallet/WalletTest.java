@@ -42,7 +42,7 @@ public class WalletTest {
     @Test
     public void temp() throws Exception {
         String password = "test";
-        File keyDirectory = new File("E:\\test");
+        File keyDirectory = new File("F:\\test");
         String keyfile = WalletUtils.generateNewWalletFile(new String(password), keyDirectory, true);
 
         System.out.println("Key file: " + keyfile);
