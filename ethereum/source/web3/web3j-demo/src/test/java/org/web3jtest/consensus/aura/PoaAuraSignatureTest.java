@@ -1,4 +1,4 @@
-package org.web3jtest.consensus;
+package org.web3jtest.consensus.aura;
 
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import rx.Subscription;
  * @Date 2018-06-18
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaSignatureTest extends AbstractTestRunner {
+public class PoaAuraSignatureTest extends AbstractTestRunner {
 
     @Test
     public void displaySIignature() throws Exception {

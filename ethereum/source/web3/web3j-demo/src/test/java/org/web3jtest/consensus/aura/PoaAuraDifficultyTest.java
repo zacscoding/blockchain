@@ -1,4 +1,4 @@
-package org.web3jtest.consensus;
+package org.web3jtest.consensus.aura;
 
 import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import java.math.BigInteger;
@@ -16,7 +16,7 @@ import org.web3jtest.util.SimpleLogger;
  * @Date 2018-06-13
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaDifficultyTest {
+public class PoaAuraDifficultyTest {
 
     BigInteger maxValue = new BigInteger("340282366920938463463374607431768211455");
     long stepDuration = 5L;

@@ -1,4 +1,4 @@
-package org.web3jtest.consensus;
+package org.web3jtest.consensus.aura;
 
 import static org.junit.Assert.assertTrue;
 
@@ -26,7 +26,7 @@ import org.web3jtest.util.SimpleLogger;
  * @Date 2018-06-07
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaMinerViewTest {
+public class PoaAuraMinerViewTest {
     String uri = "http://192.168.5.77:8540/";
     Map<String, String> miners;
 

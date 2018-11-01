@@ -1,4 +1,4 @@
-package org.web3jtest.consensus;
+package org.web3jtest.consensus.aura;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import org.web3jtest.util.SimpleLogger;
  * @Date 2018-06-18
  * @GitHub : https://github.com/zacscoding
  */
-public class ParityAuraStepTest {
+public class PoaAuraStepTest {
 
     List<Spec> specs;
 

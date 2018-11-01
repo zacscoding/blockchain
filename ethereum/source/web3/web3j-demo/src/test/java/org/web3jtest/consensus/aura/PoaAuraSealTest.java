@@ -1,4 +1,4 @@
-package org.web3jtest.consensus;
+package org.web3jtest.consensus.aura;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.web3jtest.util.SimpleLogger;
  * @Date 2018-06-08
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaSealTest {
+public class PoaAuraSealTest {
 
     @Test
     public void blockHashCompare() {

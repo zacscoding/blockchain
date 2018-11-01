@@ -29,7 +29,7 @@ public class AbstractTestRunner {
         // HttpService httpService = new HttpService("http://192.168.79.128:8540");
         // HttpService httpService = new HttpService("http://192.168.5.77:8540");
         
-        HttpService httpService = new HttpService("http://192.168.5.78:8540");
+        HttpService httpService = new HttpService("http://192.168.5.78:9540");
 
         web3j = Web3j.build(httpService);
         admin = Admin.build(httpService);
