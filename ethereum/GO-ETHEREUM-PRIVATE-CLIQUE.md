@@ -429,8 +429,10 @@ Refresh = 5000000000
 
 ```
 #!/bin/sh
-
 nohup ./geth --config node.toml --gasprice '1' -etherbase '0xaa4d9e92fe6fbf84e9e8003536b6ee7b42072ac6' -unlock '0xaa4d9e92fe6fbf84e9e8003536b6ee7b42072ac6' --password /applications/geth/password.txt --mine  >> /applications/geth/node.log &
+
+# without hitting enter
+# nohup $SCRIPTPATH/geth --config $SCRIPTPATH/node.toml --gasprice '1' -etherbase '0xaa4d9e92fe6fbf84e9e8003536b6ee7b42072ac6' -unlock '0xaa4d9e92fe6fbf84e9e8003536b6ee7b42072ac6' --password /applications/geth/password.txt --mine  1>> /applications/geth/node.log 2>&1 &
 ```  
 
 > stop.sh  

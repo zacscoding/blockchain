@@ -37,6 +37,12 @@ public class ConnectGethNodes {
             enodes.add(Pair.of(urls[i], enode));
         }
     }
+    @Test
+    public void displayEnodes() {
+        for(Pair<String, String> enode : enodes) {
+            SimpleLogger.println("{} -> {}", enode.getKey(), enode.getValue());
+        }
+    }
 
     @Test
     public void displayNodeInfo() {
