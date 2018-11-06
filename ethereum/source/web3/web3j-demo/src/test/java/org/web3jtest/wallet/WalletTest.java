@@ -30,7 +30,9 @@ public class WalletTest {
     @Test
     public void genearteKeyFile() throws Exception {
         String password = "pass";
-        ECKeyPair ecKeyPair = Keys.createEcKeyPair();
+        ECKeyPair ecKeyPair = org.web3j.crypto.Keys.createEcKeyPair();
+        ecKeyPair.getPrivateKey();
+
         WalletFile walletFile = Wallet.createStandard(password, ecKeyPair);
         GsonUtil.printGsonPretty(walletFile);
 

@@ -12,9 +12,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.filters.Callback;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
 import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.EthLog;
 import org.web3j.protocol.core.methods.response.EthLog.Hash;
 import org.web3j.protocol.core.methods.response.EthLog.LogResult;
@@ -73,7 +75,7 @@ public class TransactionTest extends AbstractTestRunner {
     public void newPendingTransactionFilter() throws Exception {
         System.out.println("## Start to ##");
         LogLevelUtil.setInfo();
-        long blockTime = 1000L;
+        long blockTime = 5000L;
         BigInteger filterId = web3j.ethNewPendingTransactionFilter().send().getFilterId();
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         Runnable runnable = () -> {
@@ -99,8 +101,36 @@ public class TransactionTest extends AbstractTestRunner {
     }
 
     @Test
-    public void sendRawTransaction() throws Exception {
+    public void findTransaction() throws Exception {
+        BigInteger startNumber = web3j.ethBlockNumber().send().getBlockNumber();
+        BigInteger until = BigInteger.valueOf(555);
+        boolean includeTxOnly = true;
+        int txCount = 0;
+        SimpleLogger.println("Start number : {} > last number : {} | include tx only : {}"
+            , startNumber.toString(10), until.toString(10), includeTxOnly);
 
+        while (startNumber.compareTo(until) > 0) {
+            Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(startNumber), true).send().getBlock();
+            if (includeTxOnly && block.getTransactions().size() < 1) {
+                startNumber = startNumber.subtract(BigInteger.ONE);
+                continue;
+            }
+
+            long blockNumber = block.getNumber().longValue();
+            String gasUsed = String.format("%.2f", block.getGasUsed().doubleValue() / block.getGasLimit().doubleValue() * 100.0D);
+            SimpleLogger.build()
+                        .appendln("Find txns block. number : {} | #tx : {} | index : {} | diff : {} | gas limit : {} | gas used : {} ({}%)"
+                            , blockNumber, block.getTransactions().size(), blockNumber % 5, block.getDifficulty().toString(10)
+                            , block.getGasLimit().toString(10), block.getGasUsed().toString(10), gasUsed)
+                        .flush();
+            txCount += block.getTransactions().size();
+            startNumber = startNumber.subtract(BigInteger.ONE);
+        }
+        SimpleLogger.println("#Total txns : {}", txCount);
+    }
+
+    @Test
+    public void sendRawTransaction() throws Exception {
     }
 
     /* ===================================================================================================================================================

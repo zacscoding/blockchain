@@ -1,5 +1,6 @@
 package org.web3jtest.eth;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -94,8 +95,31 @@ public class BlockTest extends AbstractTestRunner {
         } else {
             System.out.println("Not exist uncles..");
         }
-
     }
+
+    @Test
+    public void checkGasLimit() throws Exception {
+        int start = 563;
+        int last = web3j.ethBlockNumber().send().getBlockNumber().intValue();
+        // int last = 100;
+        BigInteger prevGasLimit = BigInteger.ZERO;
+        BigInteger prevGasUsed = BigInteger.ZERO;
+
+        // long newGasLimit = Math.max(125000, (new BigInteger(1, newBlock.getGasLimit()).longValue() * (1024 - 1) + (newBlock.getGasUsed() * 6 / 5)) / 1024);
+
+        for (int i = start; i <= last; i++) {
+            Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.valueOf(i)), false).send().getBlock();
+            BigInteger gasLimit = block.getGasLimit();
+            String gasUsed = String.format("%.2f", (block.getGasUsed().doubleValue() / block.getGasLimit().doubleValue()) * 100.0D);
+            BigInteger delta = gasLimit.subtract(prevGasLimit);
+            long newGasLimit = Math.max(125000, (prevGasLimit.longValue() * (1024 - 1) + (prevGasUsed.intValue() * 6 / 5)) / 1024);
+            SimpleLogger.println("Block {} > gas limit : {} | gas used : {} ({}%) | delta : {} > expected : {} | diff : {}"
+            , i, gasLimit.toString(10), block.getGasUsed().toString(10), gasUsed, delta.toString(10) , newGasLimit, gasLimit.longValue() - newGasLimit);
+            prevGasLimit = gasLimit;
+            prevGasUsed = block.getGasUsed();
+        }
+    }
+
 
     @Test
     public void test() throws Exception {
