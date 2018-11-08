@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -127,6 +128,44 @@ public class CliqueExtradataTest {
         String hexSealField = "75b46e00b38dbe35301804d18b0bed0a1f9ee433fc63ce3e7fcd7fa5725b608e0275561b0b54dea388203d05b00bc78a3d3fc019b4511ca58ef1eb01cd034c5b00";
 
         assertTrue(signed.equals(hexSealField));
+    }
+
+    @Test
+    public void extractSigner() {
+        // Seal field
+        String signature = "75b46e00b38dbe35301804d18b0bed0a1f9ee433fc63ce3e7fcd7fa5725b608e0275561b0b54dea388203d05b00bc78a3d3fc019b4511ca58ef1eb01cd034c5b00";
+        // Block header
+        BlockHeader header = new BlockHeader(
+            Numeric.hexStringToByteArray("0xa03c5c86476b69b8e39b9b277441cdb663014515b3e9fea89a654ab9173416b2") // parent hash
+            ,Numeric.hexStringToByteArray("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347") // unclesHash
+            ,Numeric.hexStringToByteArray("0x0000000000000000000000000000000000000000") // coinbase
+            ,Numeric.hexStringToByteArray("0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000") // logs bloom
+            ,Numeric.hexStringToByteArray("0x2") // difficulty
+            , 1L    // number
+            ,Numeric.hexStringToByteArray("0x47c94c") // gasLimit
+            ,0L // gasUsed
+            ,new BigInteger("5bcf0654", 16).longValue() // timestamp
+            ,Numeric.hexStringToByteArray("0xd683010811846765746886676f312e3130856c696e7578000000000000000000") // extraData
+            ,Numeric.hexStringToByteArray("0x0000000000000000000000000000000000000000000000000000000000000000") // mixHash
+            ,Numeric.hexStringToByteArray("0x0000000000000000") // nonce
+        );
+        header.setStateRoot(Numeric.hexStringToByteArray("0x124ad94289a573ed03b0f48c57a544dfe8141dcdf1d79de5ef85c6aafcd65a04"));
+        // header.setTransactionsRoot(Numeric.hexStringToByteArray(block.getTransactionsRoot()));
+        // header.setReceiptsRoot(Numeric.hexStringToByteArray(block.getReceiptsRoot()));
+
+        // Extract signer`s addr
+        try {
+            byte[] addr = ECKey.signatureToAddress(header.getHash(), decodeSignature(signature));
+            String privateKey = "bb9969d37683b5d5fe26e51e6bf5ecb7eb1429ac05c4ca9d70c69bf1f09496dc";
+            byte[] originAddr = ECKey.fromPrivate(Numeric.hexStringToByteArray(privateKey)).getAddress();
+            SimpleLogger.println("Origin : {}\nExtract addr : {}", Numeric.toHexString(originAddr), Numeric.toHexString(addr));
+            //        Output
+            //        Origin : 0xf4a98b035bda9dfea0b8c7e0cf574f6da66f0bbb
+            //        Extract addr : 0xf4a98b035bda9dfea0b8c7e0cf574f6da66f0bbb
+        } catch(SignatureException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     private String getBlockByNumber(String url, String hexBlockNumber, boolean includeTx) {

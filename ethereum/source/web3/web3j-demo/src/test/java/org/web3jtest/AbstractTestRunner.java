@@ -40,15 +40,15 @@ public class AbstractTestRunner {
         // HttpService httpService = new HttpService("http://192.168.5.77:8540");
         // httpService = new HttpService("http://54.180.40.81:9540");
 
-        HttpService httpService = new HttpService("http://192.168.5.78:9540");
+        //HttpService httpService = new HttpService("http://192.168.5.78:9540");
 
-        /*try {
+        try {
             String url = Files.readLines(new File("src/test/resources/secret.txt"), StandardCharsets.UTF_8).get(0);
             httpService = new HttpService(url);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-        }*/
+        }
 
 
         web3j = Web3j.build(httpService);

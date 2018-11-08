@@ -103,7 +103,8 @@ public class TransactionTest extends AbstractTestRunner {
     @Test
     public void findTransaction() throws Exception {
         BigInteger startNumber = web3j.ethBlockNumber().send().getBlockNumber();
-        BigInteger until = BigInteger.valueOf(555);
+        BigInteger until = BigInteger.valueOf(0);
+
         boolean includeTxOnly = true;
         int txCount = 0;
         SimpleLogger.println("Start number : {} > last number : {} | include tx only : {}"
@@ -119,7 +120,7 @@ public class TransactionTest extends AbstractTestRunner {
             long blockNumber = block.getNumber().longValue();
             String gasUsed = String.format("%.2f", block.getGasUsed().doubleValue() / block.getGasLimit().doubleValue() * 100.0D);
             SimpleLogger.build()
-                        .appendln("Find txns block. number : {} | #tx : {} | index : {} | diff : {} | gas limit : {} | gas used : {} ({}%)"
+                        .appendln("## number : {} | #tx : {} | index : {} | diff : {} | gas limit : {} | gas used : {} ({}%)"
                             , blockNumber, block.getTransactions().size(), blockNumber % 5, block.getDifficulty().toString(10)
                             , block.getGasLimit().toString(10), block.getGasUsed().toString(10), gasUsed)
                         .flush();

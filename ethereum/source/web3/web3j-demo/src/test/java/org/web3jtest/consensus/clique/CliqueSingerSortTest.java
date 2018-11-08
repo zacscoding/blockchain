@@ -3,6 +3,7 @@ package org.web3jtest.consensus.clique;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
 import org.junit.Test;
+import org.web3j.utils.Numeric;
 import org.web3jtest.util.SimpleLogger;
 
 /**
@@ -11,6 +12,13 @@ import org.web3jtest.util.SimpleLogger;
  * @GitHub : https://github.com/zacscoding
  */
 public class CliqueSingerSortTest {
+
+    @Test
+    public void getSignerFromGenesis() {
+        String extraDataString = "0x000000000000000000000000000000000000000000000000000000000000000035b1cf8b9c9499f3af7fc0167223c719aec1bdc87d0e60a4f643552fcb871a7a0b604e5dde8bda96a06208a7bb1e461c79546ab60fa07a39b296e1c9aa4d9e92fe6fbf84e9e8003536b6ee7b42072ac6db903d484a4baca1e7f9111c7e1749e462106c160000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        byte[] extraData = Numeric.hexStringToByteArray(extraDataString);
+        System.out.println(extraData.length);
+    }
     
     @Test
     public void sortAccounts() {
