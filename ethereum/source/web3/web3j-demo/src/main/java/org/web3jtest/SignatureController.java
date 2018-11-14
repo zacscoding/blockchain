@@ -1,10 +1,11 @@
 package org.web3jtest;
 
-import com.google.common.base.Charsets;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
+import org.ethereum.util.FastByteComparisons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
@@ -48,14 +49,14 @@ public class SignatureController {
 
             Map<String, String> result = new HashMap<>();
 
-            ECKey ecKey = ECKey.fromPrivate(Numeric.hexStringToByteArray(privateKey));
-            byte[] messageHash = HashUtil.sha3(message.getBytes(Charsets.UTF_8));
+            ECKey ecKey = ECKey.fromPrivate(Hex.decode(privateKey));
+            byte[] messageHash = HashUtil.sha3(message.getBytes(Charset.forName("UTF-8")));
 
             ECKey.ECDSASignature signature = ecKey.sign(messageHash);
 
-            result.put("address", Numeric.toHexString(ecKey.getAddress()));
+            result.put("address", Numeric.prependHexPrefix(Hex.toHexString(ecKey.getAddress())));
             result.put("msg", message);
-            result.put("sig", signature.toHex());
+            result.put("sig", Numeric.prependHexPrefix(signature.toHex()));
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -82,17 +83,14 @@ public class SignatureController {
             String signature = (String) request.get("sig");
             String message = (String) request.get("msg");
 
-            ECKey.ECDSASignature sig = decodeSignature(signature);
+            ECKey.ECDSASignature decodedSig = decodeSignature(signature);
 
-            byte[] messageHash = HashUtil.sha3(message.getBytes(Charsets.UTF_8));
-            ECKey recover = ECKey.signatureToKey(messageHash, sig);
+            byte[] messageSha = HashUtil.sha3(message.getBytes(Charset.forName("UTF-8")));
 
-            if (!Hex.toHexString(recover.getAddress()).equals(Numeric.cleanHexPrefix(address))) {
-                logger.warn(String.format("Invalid address. expected : %s, but %s", Numeric.cleanHexPrefix(address), Hex.toHexString(recover.getAddress())));
-                return ResponseEntity.ok(false);
-            }
+            byte[] addr = ECKey.signatureToAddress(messageSha, decodedSig);
+            byte[] requestAddr = Numeric.hexStringToByteArray(address);
 
-            return ResponseEntity.ok().body(recover.verify(messageHash, sig));
+            return ResponseEntity.ok(FastByteComparisons.equal(addr, requestAddr));
         } catch (Exception e) {
             logger.warn("Failed to verify.", e);
             return ResponseEntity.badRequest().build();
