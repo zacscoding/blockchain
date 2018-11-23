@@ -1,7 +1,0 @@
-# Data format
-
-## Block  
-
-```aidl
-
-```
