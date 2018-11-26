@@ -2,16 +2,25 @@ package org.demo.smartcontract;
 
 import com.google.common.io.Files;
 import java.io.File;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
+import org.demo.util.CompareUtil;
+import org.demo.util.GsonUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.demo.util.SimpleLogger;
+import rx.Subscription;
 
 /**
  * @author zacconding
@@ -33,11 +42,7 @@ public class SmartContractSearchTest {
 
     @Test
     public void checkSmartContractCreate() throws Exception {
-        String[] hashes = new String[] {
-            "0x4a2cb85b7a22e65334f3538723d93288a5e59a008e4b899791d85cf06c3bdae2",
-            "0x32520b3522b9c99ede5731ac3d6354aa7980d1353d013d57c865d45bd3442186",
-            "0x9b7b8f05cdc6f8a134802f3c435c328e19ade85e1793fcb93fa3ef44c08547e5"
-        };
+        String[] hashes = new String[] {"0x4a2cb85b7a22e65334f3538723d93288a5e59a008e4b899791d85cf06c3bdae2", "0x32520b3522b9c99ede5731ac3d6354aa7980d1353d013d57c865d45bd3442186", "0x9b7b8f05cdc6f8a134802f3c435c328e19ade85e1793fcb93fa3ef44c08547e5"};
 
         // 1) check by transaction. to is null or not
         Consumer<String> checkFromTransaction = hash -> {
@@ -48,6 +53,7 @@ public class SmartContractSearchTest {
                     SimpleLogger.println(" >>> Not exist");
                 } else {
                     boolean isContractCreate = optional.get().getTo() == null;
+                    // boolean isContractCreate = optional.get().getCreates() != null;
                     SimpleLogger.println(">> is contract create : {}", isContractCreate);
                 }
             } catch (Exception e) {
@@ -72,10 +78,54 @@ public class SmartContractSearchTest {
             }
         };
 
-
         for (String hash : hashes) {
             checkFromTransaction.accept(hash);
             checkFromTransactionReceipt.accept(hash);
         }
+    }
+
+    @Test
+    public void topicFilters() throws Exception {
+        CountDownLatch countDownLatch = new CountDownLatch(5);
+
+        EthFilter ethFilter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, "0x92e2b8c8c175d2a0771608ede2fac18cb516dd17");
+        //ethFilter.addSingleTopic("logFileAddedStatus");
+
+        Subscription subscription = web3j.ethLogObservable(ethFilter).subscribe(log -> {
+            countDownLatch.countDown();
+            SimpleLogger.build()
+                        .appendln("block number : {}", log.getBlockNumber())
+                        .appendln("data : {}", log.getData())
+                        .appendln("type : {}", log.getType())
+                        .appendln("log index : {}", log.getLogIndex())
+                        .flush();
+        });
+
+        countDownLatch.await();
+        subscription.isUnsubscribed();
+    }
+
+    @Test
+    public void temp() throws Exception {
+        Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(new BigInteger("312678", 10)), true).send().getBlock();
+        Transaction tx = (Transaction) block.getTransactions().get(0).get();
+        TransactionReceipt tr = web3j.ethGetTransactionReceipt(tx.getHash()).send().getTransactionReceipt().get();
+        System.out.println(GsonUtil.toStringPretty(tx));
+        System.out.println("------------------------------");
+        System.out.println(GsonUtil.toStringPretty(tr));
+        System.out.println("------------------------------");
+        System.out.println(GsonUtil.toStringPretty(block));
+        System.out.println("------------------------------");
+    }
+
+    @Test
+    public void temp2() throws Exception {
+        String hash = "0x2330373884427dc4095b16ace4dba0c2f8c5ab3425d0e2c409c0dff3317d3fff".trim();
+        Transaction tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
+        TransactionReceipt tr = web3j.ethGetTransactionReceipt(tx.getHash()).send().getTransactionReceipt().get();
+        System.out.println(GsonUtil.toStringPretty(tx));
+        System.out.println("------------------------------");
+        System.out.println(GsonUtil.toStringPretty(tr));
+        System.out.println("------------------------------");
     }
 }
