@@ -21,7 +21,7 @@ import rx.Subscription;
  * @Date 2018-06-18
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaAuraSignatureTest extends AbstractTestRunner {
+public class AuraSignatureTest extends AbstractTestRunner {
 
     @Test
     public void displaySIignature() throws Exception {

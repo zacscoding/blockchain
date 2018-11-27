@@ -19,7 +19,7 @@ import org.demo.util.SimpleLogger;
  * @Date 2018-06-07
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaAuraMinerViewTest {
+public class AuraMinerViewTest {
     String uri = "http://192.168.5.77:8540/";
     Map<String, String> miners;
 

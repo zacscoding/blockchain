@@ -20,7 +20,7 @@ import org.demo.util.SimpleLogger;
  * @Date 2018-06-18
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaAuraStepTest {
+public class AuraStepTest {
 
     List<Spec> specs;
 

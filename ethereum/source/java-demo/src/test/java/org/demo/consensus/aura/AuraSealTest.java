@@ -18,7 +18,7 @@ import org.demo.util.SimpleLogger;
  * @Date 2018-06-08
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaAuraSealTest {
+public class AuraSealTest {
 
     @Test
     public void blockHashCompare() {

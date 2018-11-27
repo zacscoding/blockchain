@@ -15,7 +15,7 @@ import org.demo.util.SimpleLogger;
  * @Date 2018-06-13
  * @GitHub : https://github.com/zacscoding
  */
-public class PoaAuraDifficultyTest {
+public class AuraDifficultyTest {
 
     BigInteger maxValue = new BigInteger("340282366920938463463374607431768211455");
     long stepDuration = 5L;
