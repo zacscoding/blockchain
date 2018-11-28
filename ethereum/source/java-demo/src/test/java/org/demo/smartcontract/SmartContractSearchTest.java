@@ -2,6 +2,7 @@ package org.demo.smartcontract;
 
 import com.google.common.io.Files;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -85,6 +86,34 @@ public class SmartContractSearchTest {
     }
 
     @Test
+    public void checkEOAorCA() throws IOException {
+        String[] addrs = new String[] {
+            "0x087a1fb515e01a91c48efcd7341eb2a468353c14"
+            ,"0xa"
+            ,"0x087a1fb515e01a91c48efcd7341eb2a468353c15"
+            ,"0x68a4396489eca3df739fe43bf23e4976f2f164fb"
+        };
+
+        for (String addr : addrs) {
+            String code = web3j.ethGetCode(addr, DefaultBlockParameterName.LATEST).send().getCode();
+            if (code == null) {
+                SimpleLogger.println("## Check addr : {} is invalid address", addr);
+            } else {
+                boolean isCA = code != null && !code.equals("0x");
+                SimpleLogger.println("## Check addr : {} >> {} (code : {})", addr, (isCA ? "CA" : "EOA "), code);
+            }
+        }
+        /*
+        output
+        ## Check addr : 0x087a1fb515e01a91c48efcd7341eb2a468353c14 >> EOA  (code : 0x)
+        ## Check addr : 0xa is invalid address
+        ## Check addr : 0x087a1fb515e01a91c48efcd7341eb2a468353c15 >> EOA  (code : 0x)
+        ## Check addr : 0x68a4396489eca3df739fe43bf23e4976f2f164fb >> CA (code : 0x608060405260043610...
+         */
+    }
+
+
+    @Test
     public void topicFilters() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(5);
 
@@ -104,6 +133,8 @@ public class SmartContractSearchTest {
         countDownLatch.await();
         subscription.isUnsubscribed();
     }
+
+    //////////////////////////////////////////////////////////////
 
     @Test
     public void temp() throws Exception {
