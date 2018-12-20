@@ -22,6 +22,8 @@ import org.demo.AbstractTestRunner;
 import org.demo.util.GsonUtil;
 import org.demo.util.LogLevelUtil;
 import org.demo.util.SimpleLogger;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Convert.Unit;
 import rx.Subscription;
 
 /**
@@ -33,11 +35,15 @@ public class TransactionTest extends AbstractTestRunner {
 
     @Test
     public void findTxByHash() throws Exception {
-        List<String> hashes = Arrays.asList("0x638c01101169890647e546637905b7ffbb4993d8db858ca3bac1b4e5cb381e5b");
+        List<String> hashes = Arrays.asList("0xd2c178db394957c0bad6e78b5d2c08e263d333cac6f5dd33415f1c9c983beea6");
 
         for (String hash : hashes) {
             Transaction tx = web3j.ethGetTransactionByHash(hash).send().getResult();
             SimpleLogger.printJSONPretty(tx);
+            TransactionReceipt tr = web3j.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get();
+            SimpleLogger.printJSONPretty(tr);
+            System.out.println(web3j.ethGetBlockByHash(tx.getBlockHash(), false).send().getBlock().getTimestamp().longValue());
+            System.out.println(tr.getContractAddress());
         }
     }
 

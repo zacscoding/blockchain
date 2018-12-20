@@ -26,9 +26,8 @@ public class ConnectGethNodes {
     @Before
     public void setUp() throws IOException {
         urls = new String[] {
-            "http://192.168.5.78:8501"
-            ,"http://192.168.5.78:8502"
-            ,"http://192.168.5.78:8503"
+            "http://192.168.5.78:8540/"
+            ,"http://192.168.5.78:8541/"
         };
 
         enodes = new ArrayList<>();
