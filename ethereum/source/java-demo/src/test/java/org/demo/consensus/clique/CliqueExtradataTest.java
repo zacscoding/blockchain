@@ -1,6 +1,7 @@
 package org.demo.consensus.clique;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -154,6 +155,43 @@ public class CliqueExtradataTest {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void extractSignerFromExtraData() throws SignatureException {
+        // given extra data i.e written to block
+        String extraDataHex = "0xd683010811846765746886676f312e3130856c696e7578000000000000000000c60a5c7b2f03793c5704b91e511b06f8f3fa601ed4b9b938a4c0e60ac747f1b505e13a32f3ad6cfd1fd640c440826ac3ff1801c31df9aba019b725a557700e8700";
+        byte[] extraData = Numeric.hexStringToByteArray(extraDataHex);
+
+        // extract seal field
+        byte[] extraSeal = new byte[65]; // 0xc60a5c7b2f03793c5704b91e511b06f8f3fa601ed4b9b938a4c0e60ac747f1b505e13a32f3ad6cfd1fd640c440826ac3ff1801c31df9aba019b725a557700e8700
+        System.arraycopy(extraData, extraData.length - 65, extraSeal, 0, 65);
+
+        // extra data without seal value
+        byte[] extraDataWithoutSeal = new byte[extraData.length - extraSeal.length];
+        System.arraycopy(extraData, 0, extraDataWithoutSeal, 0, extraData.length - extraSeal.length);
+
+        // given block header
+        BlockHeader header = new BlockHeader(
+            Numeric.hexStringToByteArray("0x72e9d6f4ac05274a7d0ac546ab1e951f9f2156bdc070cd49f08b8be70391ceae") // parent hash
+            ,Numeric.hexStringToByteArray("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347") // unclesHash
+            ,Numeric.hexStringToByteArray("0x0000000000000000000000000000000000000000") // coinbase
+            ,Numeric.hexStringToByteArray("0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000") // logs bloom
+            ,Numeric.hexStringToByteArray("0x2") // difficulty
+            , 1L    // number
+            ,Numeric.hexStringToByteArray("0x47c94c") // gasLimit
+            ,0L // gasUsed
+            ,new BigInteger("5c1b31ee", 16).longValue() // timestamp
+            , extraDataWithoutSeal // extradata without seal
+            ,Numeric.hexStringToByteArray("0x0000000000000000000000000000000000000000000000000000000000000000") // mixHash
+            ,Numeric.hexStringToByteArray("0x0000000000000000") // nonce
+        );
+        header.setStateRoot(Numeric.hexStringToByteArray("0xb3a44d3a4d1899e8d9a400547f3d26d8f4d997c79b1390ad137de6687a34471c"));
+
+        byte[] addr = ECKey.signatureToAddress(header.getHash(), decodeSignature(Numeric.toHexString(extraSeal)));
+        byte[] expectedAddr = Numeric.hexStringToByteArray("0x83a786e152fc494e6feb9646fa2d3751dab871f5");
+
+        assertThat(addr, is(expectedAddr));
     }
 
     private String getBlockByNumber(String url, String hexBlockNumber, boolean includeTx) {
