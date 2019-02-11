@@ -18,6 +18,7 @@
 
 package org.keystore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -35,7 +36,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
 import org.spongycastle.crypto.generators.SCrypt;
@@ -61,7 +61,6 @@ public class KeystoreFormat {
             // salt
             final byte[] salt = generateRandomBytes(32);
 
-
             final byte[] derivedKey = scrypt(password.getBytes(), salt, ScryptN, ScryptR, ScryptP, ScryptDklen);
 
             // 128-bit initialisation vector for the cipher (16 bytes)
@@ -70,7 +69,6 @@ public class KeystoreFormat {
             final byte[] encryptKey = Arrays.copyOfRange(derivedKey, 0, 16);
             final byte[] cipherText = encryptAes(iv, encryptKey, privateKey);
             final byte[] mac = HashUtil.sha3(concat(Arrays.copyOfRange(derivedKey, 16, 32), cipherText));
-
 
             final KeystoreItem keystore = new KeystoreItem();
             keystore.address = Hex.toHexString(key.getAddress());
@@ -129,9 +127,9 @@ public class KeystoreFormat {
             }
 
             byte[] privateKey = decryptAes(
-                    Hex.decode(keystore.getCrypto().getCipherparams().getIv()),
-                    cipherKey,
-                    Hex.decode(keystore.getCrypto().getCiphertext())
+                Hex.decode(keystore.getCrypto().getCipherparams().getIv()),
+                cipherKey,
+                Hex.decode(keystore.getCrypto().getCiphertext())
             );
 
             return ECKey.fromPrivate(privateKey);
@@ -140,15 +138,18 @@ public class KeystoreFormat {
         }
     }
 
-    private byte[] decryptAes(byte[] iv, byte[] keyBytes, byte[] cipherText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    private byte[] decryptAes(byte[] iv, byte[] keyBytes, byte[] cipherText)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         return processAes(iv, keyBytes, cipherText, Cipher.DECRYPT_MODE);
     }
 
-    private byte[] encryptAes(byte[] iv, byte[] keyBytes, byte[] cipherText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    private byte[] encryptAes(byte[] iv, byte[] keyBytes, byte[] cipherText)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         return processAes(iv, keyBytes, cipherText, Cipher.ENCRYPT_MODE);
     }
 
-    private byte[] processAes(byte[] iv, byte[] keyBytes, byte[] cipherText, int encryptMode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+    private byte[] processAes(byte[] iv, byte[] keyBytes, byte[] cipherText, int encryptMode)
+        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
@@ -180,7 +181,8 @@ public class KeystoreFormat {
     private byte[] checkMacScrypt(KeystoreItem keystore, String password) throws Exception {
         byte[] part = new byte[16];
         KdfParams params = keystore.getCrypto().getKdfparams();
-        byte[] h = scrypt(password.getBytes(), Hex.decode(params.getSalt()), params.getN(), params.getR(), params.getP(), params.getDklen());
+        byte[] h = scrypt(password.getBytes(), Hex.decode(params.getSalt()), params.getN(), params.getR(),
+            params.getP(), params.getDklen());
         byte[] cipherText = Hex.decode(keystore.getCrypto().getCiphertext());
         System.arraycopy(h, 16, part, 0, 16);
 

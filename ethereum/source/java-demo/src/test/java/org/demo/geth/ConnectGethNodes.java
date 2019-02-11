@@ -1,10 +1,10 @@
 package org.demo.geth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.demo.rpc.JsonRpcHttpService;
@@ -25,9 +25,9 @@ public class ConnectGethNodes {
 
     @Before
     public void setUp() throws IOException {
-        urls = new String[] {
+        urls = new String[]{
             "http://192.168.5.78:8540/"
-            ,"http://192.168.5.78:8541/"
+            , "http://192.168.5.78:8541/"
         };
 
         enodes = new ArrayList<>();
@@ -36,9 +36,10 @@ public class ConnectGethNodes {
             enodes.add(Pair.of(urls[i], enode));
         }
     }
+
     @Test
     public void displayEnodes() {
-        for(Pair<String, String> enode : enodes) {
+        for (Pair<String, String> enode : enodes) {
             SimpleLogger.println("{} -> {}", enode.getKey(), enode.getValue());
         }
     }
@@ -53,11 +54,12 @@ public class ConnectGethNodes {
         for (int i = 0; i < urls.length; i++) {
             String enode = enodes.get(i).getRight();
 
-            for(int j=0; j<urls.length; j++) {
+            for (int j = 0; j < urls.length; j++) {
                 if (i == j) {
                     continue;
                 }
-                Boolean result = (Boolean) JsonRpcHttpService.requestAndGetResult(urls[j], "admin_addPeer", null, enode);
+                Boolean result = (Boolean) JsonRpcHttpService
+                    .requestAndGetResult(urls[j], "admin_addPeer", null, enode);
                 SimpleLogger.println("Node{} -> Node{} ==> {}", i, j, result);
             }
         }
@@ -73,7 +75,7 @@ public class ConnectGethNodes {
         displayPretty(urls[n2], "admin_removePeer", enodes.get(n1).getValue());
     }
 
-    private String getEnode(String json) throws IOException  {
+    private String getEnode(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(json).get("result").get("enode").asText();
     }

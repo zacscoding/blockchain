@@ -1,10 +1,12 @@
 package org.demo.eth;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.demo.util.SimpleLogger;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.util.ByteUtil;
@@ -13,6 +15,12 @@ import org.keystore.KeystoreFormat;
 import org.spongycastle.util.encoders.Hex;
 import org.springframework.core.io.ClassPathResource;
 import org.demo.AbstractTestRunner;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.Request;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.Numeric;
 
 /**
  * @author zacconding
@@ -23,6 +31,25 @@ public class SendTransactionTest extends AbstractTestRunner {
 
     private Map<String, String> passwordMap;
     private Map<String, ECKey> ecKeyMap;
+
+    @Test
+    public void createRawTx() throws Exception {
+        String privateKey = "my private key..";
+        ECKey ecKey = ECKey.fromPrivate(Numeric.hexStringToByteArray(privateKey));
+
+        final Transaction tx = new Transaction(
+            Numeric.hexStringToByteArray("0x13"),   // nonce
+            Numeric.hexStringToByteArray("0x0"),   // gasPrice
+            Numeric.hexStringToByteArray("0xe57e0"),   // gas
+            Numeric.hexStringToByteArray("0x00a43494672eac4ea96e33c8fa049e019e5b0ed9 "),    // to
+            Numeric.hexStringToByteArray("0xDE0B6B3A7640000"),    //value
+            null,
+            Integer.valueOf(870117)// chain id
+        );
+        tx.sign(ecKey);
+        String rawTx = "0x" + Hex.toHexString(tx.getEncoded());
+        System.out.println(rawTx);
+    }
 
     @Test
     public void test() throws Exception {

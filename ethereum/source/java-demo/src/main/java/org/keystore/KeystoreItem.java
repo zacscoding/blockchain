@@ -18,7 +18,7 @@
 
 package org.keystore;
 
-import org.codehaus.jackson.annotate.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * Created by Stan Reshetnyk on 02.08.16.
