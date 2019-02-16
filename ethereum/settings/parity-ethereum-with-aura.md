@@ -1,6 +1,29 @@
 # Parity POA Tutorial  
 (https://wiki.parity.io/Demo-PoA-tutorial.html)
 
+## Build  
+
+- dependencies
+
+```
+$ curl https://sh.rustup.rs -sSf | sh
+$ apt-get install build-essential cmake libudev-dev
+```  
+
+- download source & build  
+
+```
+# download Parity Ethereum code
+$ git clone https://github.com/paritytech/parity-ethereum
+$ cd parity-ethereum
+
+# build in release mode
+$ cargo build --release --features final
+```  
+
+
+## Configure network  
+
 > $vi demo-spec.json  
 
 ```
