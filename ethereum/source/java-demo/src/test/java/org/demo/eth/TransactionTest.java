@@ -24,6 +24,7 @@ import org.demo.util.LogLevelUtil;
 import org.demo.util.SimpleLogger;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
+import org.web3j.utils.Numeric;
 import rx.Subscription;
 
 /**
@@ -134,6 +135,13 @@ public class TransactionTest extends AbstractTestRunner {
 
     @Test
     public void sendRawTransaction() throws Exception {
+    }
+
+    @Test
+    public void decodeRawTransaction() throws Exception {
+        String rawTransaction = "0xf86c108506fc23ac00825208947821762b4f712c6e9755df5e0612caba43173a09888ac7230489e80000801ca0a2e0c175758bcfbeec6d9de94e2b8a7cbe9d866451732d4bb46c7b80983a197ea051544e0900a3c40a2461566ac82e510cf31b4c73825f209e7d7cc01ff2b3f4d9";
+        org.ethereum.core.Transaction tx = new org.ethereum.core.Transaction(Numeric.hexStringToByteArray(rawTransaction));
+        System.out.println(tx);
     }
 
     /* ===================================================================================================================================================
