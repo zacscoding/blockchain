@@ -1,1 +1,47 @@
+## logging
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+    demo: debug
+    root: info
 
+## Spring h2
+spring:
+  profiles: h2
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+---
+## Spring mariadb
+spring:
+  profiles: mariadb
+  datasource:
+    username: tester
+    password: tester
+    url: jdbc:mariadb://localhost:3306/testdb
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      jdbc-url: jdbc:mariadb://localhost:3306/testdb
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: create
