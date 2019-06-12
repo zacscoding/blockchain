@@ -26,6 +26,7 @@ public class TestCaInfoSupplier {
 
     static {
         try {
+            logger.info("////////////////////////////////////////////////////////////////////////////////////////////");
             logger.info("## Test info supplier setup...");
             CRYPTO = CryptoSuite.Factory.getCryptoSuite();
             SAMPLE_STORE = new SampleStore(new File(getSampleStorePath()));
