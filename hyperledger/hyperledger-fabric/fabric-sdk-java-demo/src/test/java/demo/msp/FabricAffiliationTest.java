@@ -86,6 +86,11 @@ public class FabricAffiliationTest {
         TestHelper.out("Delete %s affiliation >> %s", aff1.getName(), deleteResponse.getStatusCode());
     }
 
+    @Test
+    public void updateAffiliationWithForce() throws Exception {
+
+    }
+
     /**
      * user 에 affiliation 이 존재하는 지 체크
      */

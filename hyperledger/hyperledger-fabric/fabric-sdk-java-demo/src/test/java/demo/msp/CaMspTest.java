@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
@@ -17,8 +18,16 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+import org.hyperledger.fabric.sdk.Enrollment;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.identity.X509Enrollment;
 import org.hyperledger.fabric.sdkintegration.SampleStore;
 import org.hyperledger.fabric.sdkintegration.SampleUser;
 import org.hyperledger.fabric_ca.sdk.Attribute;
@@ -32,6 +41,7 @@ import org.hyperledger.fabric_ca.sdk.exception.AffiliationException;
 import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * CA와 직접적으로 관련 된 MSP 를 체크
@@ -213,6 +223,7 @@ public class CaMspTest {
         ordererNodeRR.setSecret(ordererNodePassword);
 
         ordererNode.setEnrollmentSecret(caClient.register(ordererNodeRR, admin));
+        // ordererAdmin
         if (!ordererNode.getEnrollmentSecret().equals(ordererNodePassword)) {
             logger.warn("Failed to register orderer node");
             return;
@@ -227,6 +238,28 @@ public class CaMspTest {
         displayMSP(ordererNode);
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // cert, pk 파일로 부터 Enrollment 인스턴스 생성 테스트
+    //////////////////////////////////////////////////////////////////////////////////
+    @Test
+    public void createEnrollmentFromString() throws Exception {
+        // pem, private key 파일 read (File -> String)
+        String signedPemPath = "test1/ca/ca.crt";
+        String privateKeyPath = "test1/ca/ca.key";
+        String pemString = IOUtils.toString(
+            new ClassPathResource(signedPemPath).getInputStream(), StandardCharsets.UTF_8
+        );
+        String privateKeyString = IOUtils.toString(
+            new ClassPathResource(privateKeyPath).getInputStream(), StandardCharsets.UTF_8
+        );
+
+        // cert -> Enrollment
+        PrivateKey privateKey = bytesToPrivateKey(privateKeyString.getBytes());
+        Enrollment enrollment = new X509Enrollment(privateKey, pemString);
+        System.out.println(enrollment.getCert());
+        System.out.println(enrollment.getKey());
+    }
 
     //////////////////////////////////////////////////////////////////////////////////
     // helpers
@@ -277,5 +310,27 @@ public class CaMspTest {
         }
 
         return null;
+    }
+
+    public PrivateKey bytesToPrivateKey(byte[] pemKey) throws CryptoException {
+        PrivateKey pk = null;
+        CryptoException ce = null;
+
+        try {
+            PemReader pr = new PemReader(new StringReader(new String(pemKey)));
+            PemObject po = pr.readPemObject();
+            PEMParser pem = new PEMParser(new StringReader(new String(pemKey)));
+
+            if (po.getType().equals("PRIVATE KEY")) {
+                pk = new JcaPEMKeyConverter().getPrivateKey((PrivateKeyInfo) pem.readObject());
+            } else {
+                logger.trace("Found private key with type " + po.getType());
+                PEMKeyPair kp = (PEMKeyPair) pem.readObject();
+                pk = new JcaPEMKeyConverter().getPrivateKey(kp.getPrivateKeyInfo());
+            }
+        } catch (Exception e) {
+            throw new CryptoException("Failed to convert private key bytes", e);
+        }
+        return pk;
     }
 }

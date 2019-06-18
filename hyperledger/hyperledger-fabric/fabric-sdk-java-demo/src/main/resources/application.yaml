@@ -1,3 +1,11 @@
+## Fabric properties
+fabric:
+  ca:
+    location: http://localhost:7054
+    admin:
+      id:
+      password:
+
 ## logging
 logging:
   level:

@@ -1,4 +1,4 @@
-package demo.fabric;
+package demo.fabric.configuration;
 
 import com.google.common.collect.Sets;
 import demo.fabric.entity.FabricUserEntity;

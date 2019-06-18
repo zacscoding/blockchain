@@ -22,6 +22,7 @@ public class TestCaInfoSupplier {
     public static final SampleStore SAMPLE_STORE;
     public static final HFCAClient CA_CLIENT;
     public static final SampleUser ADMIN;
+    public static final SampleUser PEER_ORG1_ADMIN;
     public static CryptoSuite CRYPTO;
 
     static {
@@ -41,6 +42,13 @@ public class TestCaInfoSupplier {
             if (!ADMIN.isEnrolled()) {
                 ADMIN.setEnrollment(CA_CLIENT.enroll(ADMIN.getName(), TEST_ADMIN_PW));
             }
+
+            PEER_ORG1_ADMIN = SAMPLE_STORE.getMember("peer0@PeerOrg1", "PeerOrg1");
+            if (!PEER_ORG1_ADMIN.isEnrolled()) {
+                PEER_ORG1_ADMIN.setEnrollment(CA_CLIENT.enroll(PEER_ORG1_ADMIN.getName(), "PeerOrg1PWD"));
+            }
+            PEER_ORG1_ADMIN.setMspId("PeerOrg1");
+
             logger.info("////////////////////////////////////////////////////////////////////////////////////////////");
         } catch (Exception e) {
             throw new RuntimeException(e);
