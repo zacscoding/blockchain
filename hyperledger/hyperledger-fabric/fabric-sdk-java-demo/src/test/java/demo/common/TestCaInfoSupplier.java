@@ -13,11 +13,13 @@ import org.hyperledger.fabric_ca.sdk.HFCAClient;
 @Slf4j
 public class TestCaInfoSupplier {
 
-    public static final String TEST_ADMIN_ORG = "org1";
+    // public static final String TEST_ADMIN_ORG = "org1";
+    public static final String TEST_ADMIN_ORG = "";
     public static final String TEST_ADMIN_NAME = "admin@RootCA";
     public static final String TEST_ADMIN_PW = "rootcaadmin";
     public static final String SAMPLE_STORE_PATH1 = "src/test/resources/HFCSampletest.properties";
     public static final String CA_NAME1 = "ca0.testnet.com";
+    public static final String CA_NAME2 = "ca0";
 
     public static final SampleStore SAMPLE_STORE;
     public static final HFCAClient CA_CLIENT;
@@ -69,9 +71,11 @@ public class TestCaInfoSupplier {
 
     private static String getCaName() {
         return CA_NAME1;
+        //return CA_NAME2;
     }
 
     private static String getCaLocation() {
         return "http://10.0.164.32:7054";
+        //return "http://localhost:7054";
     }
 }

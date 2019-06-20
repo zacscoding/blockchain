@@ -10,15 +10,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
@@ -33,9 +41,13 @@ import org.hyperledger.fabric.sdkintegration.SampleUser;
 import org.hyperledger.fabric_ca.sdk.Attribute;
 import org.hyperledger.fabric_ca.sdk.HFCAAffiliation;
 import org.hyperledger.fabric_ca.sdk.HFCAAffiliation.HFCAAffiliationResp;
+import org.hyperledger.fabric_ca.sdk.HFCACertificateRequest;
+import org.hyperledger.fabric_ca.sdk.HFCACertificateResponse;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
+import org.hyperledger.fabric_ca.sdk.HFCACredential;
 import org.hyperledger.fabric_ca.sdk.HFCAIdentity;
 import org.hyperledger.fabric_ca.sdk.HFCAInfo;
+import org.hyperledger.fabric_ca.sdk.HFCAX509Certificate;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
 import org.hyperledger.fabric_ca.sdk.exception.AffiliationException;
 import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
@@ -259,6 +271,44 @@ public class CaMspTest {
         Enrollment enrollment = new X509Enrollment(privateKey, pemString);
         System.out.println(enrollment.getCert());
         System.out.println(enrollment.getKey());
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // certificates 조회 후 파싱 테스트
+    //////////////////////////////////////////////////////////////////////////////////
+    @Test
+    public void getCertificates() throws Exception {
+        HFCACertificateRequest certReq = caClient.newHFCACertificateRequest();
+        long start = System.currentTimeMillis();
+        HFCACertificateResponse response = caClient.getHFCACertificates(admin, certReq);
+        long elapsed = System.currentTimeMillis() - start;
+        TestHelper.out("## getting certificates elapsed %d [ms]", elapsed);
+
+        Set<String> cnValues = new HashSet<>();
+
+        for (HFCACredential cert : response.getCerts()) {
+            HFCAX509Certificate hfcax509Certificate = (HFCAX509Certificate) cert;
+            String pem = hfcax509Certificate.getPEM();
+            X509Certificate x509Cert = hfcax509Certificate.getX509();
+            TestHelper.out("////////////////////////////////////////////////////////////////////////////////");
+            TestHelper.out("## display pem :: \n%s", pem);
+            TestHelper.out("--------------------------------------------------------------------------------");
+            TestHelper.out("version : %s", x509Cert.getVersion());
+            TestHelper.out("serial number : %s", x509Cert.getSerialNumber().toString(16));
+            TestHelper.out("subject dn : %s", x509Cert.getSubjectDN());
+            X500Name x500name = new JcaX509CertificateHolder(x509Cert).getSubject();
+            RDN cn = x500name.getRDNs(BCStyle.CN)[0];
+            String cnValue = IETFUtils.valueToString(cn.getFirst().getValue());
+            cnValues.add(cnValue);
+            TestHelper.out("cn : %s", cnValue);
+            TestHelper.out("issuer dn : %s", x509Cert.getIssuerDN());
+            TestHelper.out("not before : %s", x509Cert.getNotBefore());
+            TestHelper.out("not after : %s", x509Cert.getNotAfter());
+            TestHelper.out("signature : %s", new BigInteger(x509Cert.getSignature()).toString(16));
+            TestHelper.out("////////////////////////////////////////////////////////////////////////////////");
+        }
+
+        TestHelper.out("## Compare size -> certs : %d | cns : %d", response.getCerts().size(), cnValues.size());
     }
 
     //////////////////////////////////////////////////////////////////////////////////

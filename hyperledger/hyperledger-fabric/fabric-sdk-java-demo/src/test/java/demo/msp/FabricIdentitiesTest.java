@@ -1,8 +1,9 @@
 package demo.msp;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import demo.common.LogLevelUtil;
 import demo.common.TestCaInfoSupplier;
-import demo.common.TestHelper;
 import java.util.Collection;
 import org.hyperledger.fabric.sdkintegration.SampleUser;
 import org.hyperledger.fabric_ca.sdk.Attribute;
@@ -11,7 +12,6 @@ import org.hyperledger.fabric_ca.sdk.HFCAIdentity;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.context.CacheAwareContextLoaderDelegate;
 
 /**
  *
@@ -42,11 +42,37 @@ public class FabricIdentitiesTest {
         rr.addAttribute(new Attribute("hf.AffiliationMgr", "1"));
         rr.addAttribute(new Attribute("hf.IntermediateCA", "1"));
 
-        String secret = caClient.register(rr, admin);
-        System.out.println("## First register :: " + secret);
+        if (findIdentity(rr.getEnrollmentID()) == null) {
+            String secret = caClient.register(rr, admin);
+            assertThat(secret).isEqualTo(rr.getSecret());
+        }
 
-        rr.setSecret("newPasswd");
-        String newSecret = caClient.register(rr, admin);
-        System.out.println("## Secod register :: " + newSecret);
+        // 2) identity 조회
+        HFCAIdentity found = findIdentity(rr.getEnrollmentID());
+        assertThat(found.getSecret()).isEqualTo(rr.getSecret());
+    }
+
+    public HFCAIdentity findIdentity(String enrollmentId) throws Exception {
+        Collection<HFCAIdentity> identities = caClient.getHFCAIdentities(admin);
+
+        for (HFCAIdentity identity : identities) {
+            if (identity.getEnrollmentId().equals(enrollmentId)) {
+                return identity;
+            }
+        }
+
+        return null;
+    }
+
+    public HFCAIdentity findIdentity2(String enrollmentId) throws Exception {
+        Collection<HFCAIdentity> identities = caClient.getHFCAIdentities(admin);
+
+        for (HFCAIdentity identity : identities) {
+            if (identity.getEnrollmentId().equals(enrollmentId)) {
+                return identity;
+            }
+        }
+
+        return null;
     }
 }

@@ -3,8 +3,8 @@ package demo.channel;
 import static org.junit.Assert.assertEquals;
 
 import demo.common.TestCaInfoSupplier;
+import demo.common.TestHelper;
 import java.io.IOException;
-import java.util.Set;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -50,7 +50,7 @@ public class ChannelTest {
         channel.initialize();
         long elapsed = System.currentTimeMillis() - start;
 
-        System.out.println("## elapsed (reconstruct channel) :: " + elapsed);
+        TestHelper.out("## elapsed (reconstruct channel) :: %s[ms]", elapsed);
 
         // config block 가져오기 ( peers with shuffle + gRpc)
         byte[] channelConfigurationBytes = channel.getChannelConfigurationBytes();
@@ -60,9 +60,9 @@ public class ChannelTest {
         System.out.println(responseAsString);
 
         start = System.currentTimeMillis();
-        channel.serializeChannel();
+        byte[] serialized = channel.serializeChannel();
         elapsed = System.currentTimeMillis() - start;
-        System.out.println("## elapsed (serialized channel) :: " + elapsed);
+        TestHelper.out("## elapsed (serialized channel) :: %s[ms]", elapsed);
     }
 
     private String configTxlatorDecode(HttpClient httpclient, byte[] channelConfigurationBytes) throws IOException {
