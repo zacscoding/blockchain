@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  ## Tools (configtxgen, configtxlator)
+  fabric-cli-temp:
+    image: hyperledger/fabric-tools${IMAGE_TAG_FABRIC}
+    tty: true
+    command: /bin/bash
+    volumes:
+      - ./crypto-config/:/opt/gopath/src/github.com/hyperledger/fabric/msp/crypto-config
+    container_name: fabric-cli-temp
