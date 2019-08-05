@@ -10,8 +10,8 @@ OrdererOrgs:
   # ---------------------------------------------------------------------------
   # Orderer
   # ---------------------------------------------------------------------------
-  - Name: OrdererOrg1
-    Domain: ordererorg1.testnet.com
+  - Name: Orderer1
+    Domain: ordererorg1.example.com
     CA:
       Country: US
       Province: California
@@ -21,6 +21,19 @@ OrdererOrgs:
     # ---------------------------------------------------------------------------
     Specs:
       - Hostname: orderer1
+      - Hostname: orderer2
+  - Name: Orderer2
+    Domain: ordererorg2.example.com
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer1
+      - Hostname: orderer2
 # ---------------------------------------------------------------------------
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
@@ -29,7 +42,7 @@ PeerOrgs:
   # Org1
   # ---------------------------------------------------------------------------
   - Name: PeerOrg1
-    Domain: peerorg1.testnet.com
+    Domain: peerorg1.example.com
     # EnableNodeOUs: true
     CA:
       Country: US
@@ -69,9 +82,14 @@ PeerOrgs:
     # name collisions
     # ---------------------------------------------------------------------------
     Template:
-      Count: 1
+      Count: 2
       Specs:
+        # Start: 5
         - Hostname: peer1 # default
+          SANS:
+            - localhost
+            - 127.0.0.1
+        - Hostname: peer2 # default
           SANS:
             - localhost
             - 127.0.0.1
@@ -86,7 +104,7 @@ PeerOrgs:
   # Org2: See "Org1" for full specification
   # ---------------------------------------------------------------------------
   - Name: PeerOrg2
-    Domain: peerorg2.testnet.com
+    Domain: peerorg2.example.com
     # EnableNodeOUs: true
     CA:
       Country: US
@@ -94,5 +112,14 @@ PeerOrgs:
       Locality: San Francisco
     Template:
       Count: 2
+      Specs:
+        - Hostname: peer1 # default
+          SANS:
+            - localhost
+            - 127.0.0.1
+        - Hostname: peer2 # default
+          SANS:
+            - localhost
+            - 127.0.0.1
     Users:
       Count: 1

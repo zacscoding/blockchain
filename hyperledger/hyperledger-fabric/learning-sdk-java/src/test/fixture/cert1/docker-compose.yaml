@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  ca0:
+    image: hyperledger/fabric-ca${IMAGE_TAG_FABRIC_CA}
+    environment:
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca0
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/95fbd6471e94a3bc01c1ebdd790887bdc32c0662005681eceb0257564374a9f4_sk
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/95fbd6471e94a3bc01c1ebdd790887bdc32c0662005681eceb0257564374a9f4_sk
+      - FABRIC_CA_SERVER_REGISTRY_MAXENROLLMENTS=-1
+    ports:
+      - "7054:7054"
+    # command with sqlite3
+#    command: sh -c 'apt-get update; apt-get install -y sqlite3;
+#      apt-get install -y vim;
+#      mkdir -p /etc/hyperledger/fabric-ca-server;
+#      cp -R /tmp/msp /etc/hyperledger/fabric-ca-server;
+#      mv /etc/hyperledger/fabric-ca-server/msp/*PublicKey /etc/hyperledger/fabric-ca-server;
+#      fabric-ca-server start -b admin@RootCA:adminpw ${V11_IDENTITIES_ALLOWREMOVE} ${V11_AFFILIATIONS_ALLOWREMOVE} ${ORG_HYPERLEDGER_FABRIC_SDKTEST_INTEGRATIONTESTS_CA_TLS} -d'
+
+
+    command: sh -c 'mkdir -p /etc/hyperledger/fabric-ca-server;
+      cp -R /tmp/msp /etc/hyperledger/fabric-ca-server;
+      mv /etc/hyperledger/fabric-ca-server/msp/*PublicKey /etc/hyperledger/fabric-ca-server;
+      fabric-ca-server start -b admin@RootCA:adminpw ${V11_IDENTITIES_ALLOWREMOVE} ${V11_AFFILIATIONS_ALLOWREMOVE} ${ORG_HYPERLEDGER_FABRIC_SDKTEST_INTEGRATIONTESTS_CA_TLS} -d'
+
+    volumes:
+      - ./fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+      - ./ca-msp/:/etc/hyperledger/fabric-ca-server-config:ro
+      - ./ca-msp/:/tmp/msp:ro
+    container_name: ca0
