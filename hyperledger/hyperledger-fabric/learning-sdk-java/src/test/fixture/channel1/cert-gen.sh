@@ -17,25 +17,33 @@ function handleResult() {
 }
 
 # Start cli
-echo "##### Start fabric cli"
+echo "================================================="
+echo "## Start fabric cli"
+echo "================================================="
 docker-compose -f ./cli-compose.yaml up --force-recreate -d
 handleResult
 echo ">>>> Success"
 
 # Move materials
-echo "##### Move crypto-config"
+echo "================================================="
+echo "## Move crypto-config"
+echo "================================================="
 docker exec -t ${NAME} cp -r /opt/gopath/src/github.com/hyperledger/fabric/msp/crypto-config ${FABRIC_PATH}/
 handleResult
 echo ">>>> Success"
 
 # Generate certs
-echo "##### Generate certs from crypto-config.yaml"
+echo "================================================="
+echo "## Generate certs from crypto-config.yaml"
+echo "================================================="
 docker exec -t ${NAME} cryptogen generate --config=${FABRIC_PATH}/crypto-config/crypto-config.yaml
 handleResult
 echo ">>>> Success"
 
 # Download certs
-echo "##### Download certs"
+echo "================================================="
+echo "## Download certs"
+echo "================================================="
 sudo rm -rf ${SCRIPT_PATH}/crypto-config/ordererOrganizations
 sudo rm -rf ${SCRIPT_PATH}/crypto-config/peerOrganizations
 

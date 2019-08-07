@@ -33,6 +33,8 @@ public class FabricUserContext implements User {
     private String enrollmentSecret;
     // enrollment 요청 후 Set
     private Enrollment enrollment;
+    // admin 여부
+    private boolean isAdmin = false;
 
 
     @Override
