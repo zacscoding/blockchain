@@ -2,14 +2,11 @@ package demo.fabric.client;
 
 import static java.util.Objects.requireNonNull;
 
-import demo.fabric.dto.FabricOrdererContext;
-import demo.fabric.dto.FabricPeerContext;
-import demo.fabric.dto.FabricUserContext;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
+
 import org.hyperledger.fabric.protos.common.Common.Block;
 import org.hyperledger.fabric.sdk.Channel;
 import org.hyperledger.fabric.sdk.Channel.PeerOptions;
@@ -21,9 +18,15 @@ import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import demo.fabric.dto.FabricOrdererContext;
+import demo.fabric.dto.FabricPeerContext;
+import demo.fabric.dto.FabricUserContext;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  *
  */
+@Slf4j
 public class FabricChannelClient {
 
     public static final FabricChannelClient INSTANCE = new FabricChannelClient();
@@ -34,8 +37,9 @@ public class FabricChannelClient {
     /**
      * 채널 생성 요청 (to orderer)
      */
-    public Channel createChannel(HFClient client, String name, byte[] config, List<FabricOrdererContext> ordererContexts,
-        List<FabricUserContext> signers) throws Exception {
+    public Channel createChannel(HFClient client, String name, byte[] config,
+                                 List<FabricOrdererContext> ordererContexts,
+                                 List<FabricUserContext> signers) throws Exception {
 
         requireNonNull(client, "client");
         requireNonNull(name, "name");
@@ -48,7 +52,8 @@ public class FabricChannelClient {
         ChannelConfiguration channelConfiguration = new ChannelConfiguration(config);
 
         FabricOrdererContext ordererContext = ordererContexts.remove(0);
-        Orderer orderer = client.newOrderer(ordererContext.getName(), ordererContext.getLocation(), ordererContext.getProperties());
+        Orderer orderer = client.newOrderer(ordererContext.getName(), ordererContext.getLocation(),
+                                            ordererContext.getProperties());
 
         byte[][] configSignatures = getChannelConfigurationSignatures(client, channelConfiguration, signers);
 
@@ -69,7 +74,7 @@ public class FabricChannelClient {
      * 이미 생성 된 채널에 대하여 sdk.Channel 인스턴스 빌드
      */
     public Channel buildChannel(HFClient client, String name, List<FabricOrdererContext> ordererContexts
-        , List<FabricPeerContext> peerContexts) throws Exception {
+            , List<FabricPeerContext> peerContexts) throws Exception {
 
         requireNonNull(client, "client");
 
@@ -90,8 +95,8 @@ public class FabricChannelClient {
         if (!CollectionUtils.isEmpty(peerContexts)) {
             for (FabricPeerContext peerContext : peerContexts) {
                 channel.addPeer(
-                    convertPeer(client, peerContext),
-                    PeerOptions.createPeerOptions().setPeerRoles(peerContext.getPeerRoles())
+                        convertPeer(client, peerContext),
+                        PeerOptions.createPeerOptions().setPeerRoles(peerContext.getPeerRoles())
                 );
             }
         }
@@ -120,8 +125,9 @@ public class FabricChannelClient {
     /**
      * channelConfiguration에 대하여 signer들의 서명
      */
-    private byte[][] getChannelConfigurationSignatures(HFClient client, ChannelConfiguration channelConfiguration,
-        List<FabricUserContext> signers) throws Exception {
+    private byte[][] getChannelConfigurationSignatures(HFClient client,
+                                                       ChannelConfiguration channelConfiguration,
+                                                       List<FabricUserContext> signers) throws Exception {
 
         byte[][] configSignatures = new byte[signers.size()][];
 

@@ -1,11 +1,13 @@
 package demo.fabric.dto;
 
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.User;
 
@@ -36,6 +38,22 @@ public class FabricUserContext implements User {
     // admin 여부
     private boolean isAdmin = false;
 
+    /**
+     * 기본 이름 + enrollment 용 User 생성
+     */
+    public static FabricUserContext newInstance(Enrollment enrollment) {
+        return newInstance(DEFAULT_USER_NAME, enrollment);
+    }
+
+    /**
+     * 이름 + enrollment를 가진 User 인스턴스 생성
+     */
+    public static FabricUserContext newInstance(String name, Enrollment enrollment) {
+        return builder()
+                .name(name)
+                .enrollment(enrollment)
+                .build();
+    }
 
     @Override
     public String getName() {

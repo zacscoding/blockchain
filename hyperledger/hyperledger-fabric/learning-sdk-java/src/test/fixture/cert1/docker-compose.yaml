@@ -18,11 +18,10 @@ services:
 #      apt-get install -y vim;
 #      mkdir -p /etc/hyperledger/fabric-ca-server;
 #      cp -R /tmp/msp /etc/hyperledger/fabric-ca-server;
-#      mv /etc/hyperledger/fabric-ca-server/msp/*PublicKey /etc/hyperledger/fabric-ca-server;
-#      fabric-ca-server start -b admin@RootCA:adminpw ${V11_IDENTITIES_ALLOWREMOVE} ${V11_AFFILIATIONS_ALLOWREMOVE} ${ORG_HYPERLEDGER_FABRIC_SDKTEST_INTEGRATIONTESTS_CA_TLS} -d'
+#      mv /etc/hyperledger/fabric-ca-server/msp/*PublicKey /etc/hyperledger/fabric-ca-server;#      fabric-ca-server start -b admin@RootCA:adminpw ${V11_IDENTITIES_ALLOWREMOVE} ${V11_AFFILIATIONS_ALLOWREMOVE} ${ORG_HYPERLEDGER_FABRIC_SDKTEST_INTEGRATIONTESTS_CA_TLS} -d'
 
-
-    command: sh -c 'mkdir -p /etc/hyperledger/fabric-ca-server;
+    command: sh -c 'apt-get update && apt-get install -y sqlite3
+      mkdir -p /etc/hyperledger/fabric-ca-server;
       cp -R /tmp/msp /etc/hyperledger/fabric-ca-server;
       mv /etc/hyperledger/fabric-ca-server/msp/*PublicKey /etc/hyperledger/fabric-ca-server;
       fabric-ca-server start -b admin@RootCA:adminpw ${V11_IDENTITIES_ALLOWREMOVE} ${V11_AFFILIATIONS_ALLOWREMOVE} ${ORG_HYPERLEDGER_FABRIC_SDKTEST_INTEGRATIONTESTS_CA_TLS} -d'

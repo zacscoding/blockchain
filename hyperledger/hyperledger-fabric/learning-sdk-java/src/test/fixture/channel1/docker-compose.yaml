@@ -72,10 +72,12 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     hostname: orderer1.ordererorg1.example.com
     ports:
-      - "7050:7050"
+      - 7050:7050
+      - 8443:8443
     command: orderer
     volumes:
       # /home/zaccoding/git/work/platform/hp_api/server/src/test/fixture/channelintegration
+      - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml:ro
       - ./configtx:/etc/hyperledger/configtx:ro
       - ./crypto-config/ordererOrganizations/ordererorg1.example.com/orderers/orderer1.ordererorg1.example.com/:/etc/hyperledger/msp/orderer:ro
     depends_on:

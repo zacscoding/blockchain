@@ -1,30 +1,50 @@
 package demo.cert1;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import demo.common.TestHelper;
-import demo.fabric.dto.FabricUserContext;
+import static demo.fabric.constant.FabricConstants.ADMIN_ATTRIBUTES;
+import static demo.fabric.constant.FabricConstants.CLIENT_IDENTITY_TYPE;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
+import org.hyperledger.fabric.sdk.security.CryptoSuite.Factory;
 import org.hyperledger.fabric_ca.sdk.HFCAAffiliation;
-import org.hyperledger.fabric_ca.sdk.HFCAAffiliation.HFCAAffiliationResp;
+import org.hyperledger.fabric_ca.sdk.HFCACertificateRequest;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
+import org.hyperledger.fabric_ca.sdk.HFCAIdentity;
 import org.hyperledger.fabric_ca.sdk.HFCAInfo;
-import org.hyperledger.fabric_ca.sdk.exception.AffiliationException;
+import org.hyperledger.fabric_ca.sdk.HFCAX509Certificate;
+import org.hyperledger.fabric_ca.sdk.helper.Config;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import demo.common.TestHelper;
+import demo.fabric.client.FabricCertClient;
+import demo.fabric.client.FabricClientFactory;
+import demo.fabric.dto.FabricUserContext;
+import demo.fabric.util.FabricCertParser;
 
 /**
  *
  */
 public class Cert1Tests {
 
+    FabricCertClient certClient;
     HFCAClient caClient;
     FabricUserContext caAdmin;
 
@@ -42,13 +62,15 @@ public class Cert1Tests {
         File certFile = new File("src/test/fixture/cert1/ca-msp/ca-cert.pem");
         properties.setProperty("pemFile", certFile.getAbsolutePath());
         properties.setProperty("allowAllHostNames", "true"); //testing environment only NOT FOR PRODUCTION!
-        caClient = HFCAClient.createNewInstance(name, url, properties);
-        caClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
+
+        caClient = FabricClientFactory.createCaClient(name, url, properties);
+
+        certClient = new FabricCertClient();
 
         caAdmin = FabricUserContext.builder()
-            .name("admin@RootCA")
-            .enrollmentSecret("adminpw")
-            .build();
+                                   .name("admin@RootCA")
+                                   .enrollmentSecret("adminpw")
+                                   .build();
 
         TestHelper.out("> Try to register ca admin..");
         Enrollment enroll = caClient.enroll(caAdmin.getName(), caAdmin.getEnrollmentSecret());
@@ -56,6 +78,7 @@ public class Cert1Tests {
         TestHelper.out("> Success to register..");
     }
 
+    // ca info 파싱
     @Test
     public void displayCaInfo() throws Exception {
         HFCAInfo info = caClient.info();
@@ -69,57 +92,122 @@ public class Cert1Tests {
     }
 
     @Test
-    public void registerAndModify() throws Exception {
-        FabricUserContext peerorg1Admin = FabricUserContext
-            .builder()
-            .name("peerorg1")
-            .enrollmentSecret("passpw")
-            .affiliation("peerorg1")
-            .build();
+    public void registerAffAndIdentityAndEnrollment() throws Exception {
+        FabricUserContext peerorg1Admin = FabricUserContext.builder()
+                                                           .name("peerorg1Admin")
+                                                           .password("passpw")
+                                                           .affiliation("peerorg1")
+                                                           .build();
 
-        HFCAAffiliation caAffiliations = caClient.getHFCAAffiliations(caAdmin);
-        HFCAAffiliation affiliation = getAffiliationByName(caAffiliations, peerorg1Admin.getAffiliation());
+        // 1) affiliation 추가
+        TestHelper.out("## Check affilication > %s", peerorg1Admin.getAffiliation());
+        Optional<HFCAAffiliation> affOptional = certClient.getAffiliationByName(caClient,
+                                                                                caAdmin.getEnrollment(),
+                                                                                peerorg1Admin.getAffiliation());
 
-        TestHelper.out("> Check affiliation %s exist or not", peerorg1Admin.getAffiliation());
-
-        if (affiliation == null) {
-            TestHelper.out(">> Not exist. so create new affiliation.");
-            HFCAAffiliation hfcaAffiliation = caClient.newHFCAAffiliation(peerorg1Admin.getAffiliation());
-            HFCAAffiliationResp response = hfcaAffiliation.create(caAdmin);
-            if (!is2xxSuccessful(response)) {
-                throw new Exception("Failed to create new affiliation : " + response.getStatusCode());
-            }
-            TestHelper.out(">> success");
+        if (!affOptional.isPresent()) {
+            TestHelper.out("> Try to create new affiliation");
+            certClient.createNewAffiliation(caClient, caAdmin.getEnrollment(), peerorg1Admin.getAffiliation());
         } else {
-            TestHelper.out(">> already exist");
-        }
-    }
-
-    private HFCAAffiliation getAffiliationByName(HFCAAffiliation affiliation, String name) throws AffiliationException {
-        if (name == null || name.length() == 0 || affiliation == null) {
-            return null;
+            TestHelper.out("> Already exist");
         }
 
-        if (name.equals(affiliation.getName())) {
-            return affiliation;
-        }
+        // 2) identity 추가
+        TestHelper.out("## Try to check identity %s", peerorg1Admin.getName());
+        Optional<HFCAIdentity> identityOptional = certClient.getIdentityByName(caClient,
+                                                                               caAdmin.getEnrollment(),
+                                                                               peerorg1Admin.getName());
+        if (!identityOptional.isPresent()) {
+            TestHelper.out("> not exist. will register");
+            boolean result = certClient.registerNewIdentity(caClient, caAdmin.getEnrollment(),
+                                                            CLIENT_IDENTITY_TYPE,
+                                                            peerorg1Admin.getName(),
+                                                            peerorg1Admin.getPassword(),
+                                                            peerorg1Admin.getAffiliation(), ADMIN_ATTRIBUTES);
 
-        for (HFCAAffiliation child : affiliation.getChildren()) {
-            HFCAAffiliation found = getAffiliationByName(child, name);
-            if (found != null) {
-                return found;
+            if (result) {
+                peerorg1Admin.setEnrollmentSecret(peerorg1Admin.getPassword());
             }
+
+            TestHelper.out(">> Identity result > " + result);
+        } else {
+            TestHelper.out("> Already exist identity");
+            peerorg1Admin.setEnrollmentSecret(peerorg1Admin.getPassword());
         }
 
-        return null;
+        // 3) enrollment
+        TestHelper.out("## Try to check enrollments with filter with enrollment id : %s",
+                       peerorg1Admin.getName());
+        HFCACertificateRequest requestFilter = caClient.newHFCACertificateRequest();
+        requestFilter.setEnrollmentID(peerorg1Admin.getName());
+        List<HFCAX509Certificate> certs = certClient.getCertificates(caClient, caAdmin.getEnrollment(),
+                                                                     requestFilter);
+        if (!certs.isEmpty()) {
+            TestHelper.out("> Already exist certs. size : %d", certs.size());
+            HFCAX509Certificate cert = certs.get(0);
+            displayX509Cert(cert.getX509());
+        }
+
+        TestHelper.out("> Try to enroll %s(%s)", peerorg1Admin.getName(), peerorg1Admin.getEnrollmentSecret());
+        Enrollment enrollment = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                                  peerorg1Admin.getEnrollmentSecret());
+
+        peerorg1Admin.setEnrollment(enrollment);
+        TestHelper.out(">> Success to enroll");
+        TestHelper.out(peerorg1Admin.getEnrollment().getCert());
+        displayX509CertString(enrollment.getCert());
+
+        // 4) update enrollment
+        TestHelper.out("> After reenroll..");
+        Enrollment reenroll = caClient.reenroll(peerorg1Admin);
+        TestHelper.out(reenroll.getCert());
+        displayX509CertString(reenroll.getCert());
     }
 
-    private boolean is2xxSuccessful(HFCAAffiliationResp response) {
-        if (response == null) {
-            return false;
-        }
+    private void displayX509Cert(X509Certificate cert) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd [HH:mm:ss,SSS]");
 
-        return response.getStatusCode() >= 200 && response.getStatusCode() < 300;
+        TestHelper.out("///////////////////////////////////////////////");
+        TestHelper.out("> not before : %s, not after : %s",
+                       sdf.format(cert.getNotBefore()), sdf.format(cert.getNotAfter()));
+        TestHelper.out("> issuer dn : %s", cert.getIssuerDN());// sun.security.x509.X500Name
+    }
+
+    private void displayX509CertString(String cert) throws Exception {
+        try {
+            // openssl x509 -text -in cert1.pem
+            BufferedInputStream pem = new BufferedInputStream(new ByteArrayInputStream(cert.getBytes()));
+            CertificateFactory certFactory = CertificateFactory.getInstance(
+                    Config.getConfig().getCertificateFormat());
+            X509Certificate certificate = (X509Certificate) certFactory.generateCertificate(pem);
+
+            displayX509Cert(certificate);
+            // check Subject Alternative Names
+            Collection<List<?>> altNames = certificate.getSubjectAlternativeNames();
+            TestHelper.out("Display alt names : %s", (altNames == null ? "NULL" : "Size " + altNames.size()));
+
+            if (altNames != null) {
+                StringBuilder subAlts = new StringBuilder();
+
+                for (List<?> item : altNames) {
+                    int type = (Integer) item.get(0);
+                    if (type == 2) {
+                        subAlts.append((String) item.get(1));
+                    }
+                }
+
+                TestHelper.out("> sub alts : %s", subAlts.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Test
+    public void temp() throws Exception {
+        CryptoSuite cryptoSuite = Factory.getCryptoSuite();
+        // String csr = cryptoSuite.generateCertificationRequest(user, keypair);
     }
 
 }

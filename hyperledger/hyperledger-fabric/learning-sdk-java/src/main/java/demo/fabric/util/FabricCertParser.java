@@ -3,7 +3,15 @@ package demo.fabric.util;
 import java.io.StringReader;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -52,9 +60,23 @@ public class FabricCertParser {
      */
     public static Enrollment x509EnrollmentOf(byte[] privateKeyPem, byte[] cert) throws CryptoException {
         return new X509Enrollment(
-            getPrivateKeyFromPemBytes(privateKeyPem),
-            new String(cert)
+                getPrivateKeyFromPemBytes(privateKeyPem),
+                new String(cert)
         );
+    }
+
+    /**
+     * Cert로 부터 cn 값 추출
+     */
+    public static String getCnValue(X509Certificate cert) throws CertificateEncodingException {
+        if (cert == null) {
+            return null;
+        }
+
+        X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+        RDN cn = x500name.getRDNs(BCStyle.CN)[0];
+
+        return IETFUtils.valueToString(cn.getFirst().getValue());
     }
 
     private FabricCertParser() {
