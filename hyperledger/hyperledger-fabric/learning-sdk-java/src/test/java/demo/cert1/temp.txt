@@ -1,0 +1,181 @@
+CREATE TABLE users (
+id VARCHAR(255),
+token bytea,
+type VARCHAR(256),
+affiliation VARCHAR(1024),
+attributes TEXT,
+state INTEGER,
+max_enrollments INTEGER,
+level INTEGER DEFAULT 0,
+incorrect_password_attempts INTEGER DEFAULT 0
+);
+
+---------- register 후
+
+peerorg1Admin |(id)
+$2a$10$gYs6H8dQTjmTKo9jsquI7OpamzKK.tSLUNMlvYpDXpZnV/IiU.Q1O |(token)
+client |(type)
+peerorg1 |(affiliation)
+[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}] |(attributes)
+0 |(state)
+-1 |(max_enrollments)
+2 |(level)
+0 |(incorrect_password_attempts)
+
+
+---------- enroll 후
+peerorg1Admin |(id)
+$2a$10$gYs6H8dQTjmTKo9jsquI7OpamzKK.tSLUNMlvYpDXpZnV/IiU.Q1O |(token)
+client |(type)
+peerorg1 |(affiliation)
+[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}] |(attributes)
+1 |(state)
+-1 |(max_enrollments)
+2 |(level)
+0 |(incorrect_password_attempts)
+
+---------- enroll 재시도 후
+peerorg1Admin |(id)
+$2a$10$gYs6H8dQTjmTKo9jsquI7OpamzKK.tSLUNMlvYpDXpZnV/IiU.Q1O |(token)
+client |(type)
+peerorg1 |(affiliation)
+[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}] |(attributes)
+2 |(state)
+-1 |(max_enrollments)
+2 |(level)
+0 |(incorrect_password_attempts)
+
+
+======================================================================================================================================================
+
+1) register 후 users 테이블
+sqlite> select * from users where id = 'peerorg1Admin';
+
+peerorg1Admin|$2a$10$qJYiRYvGvRbZWpDOeF3ikeEpFbUOD42jMVgA5.MDPfZGGP7FeQ5R2|client|peerorg1|[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}]|0|-1|2|0
+
+2-1) enroll 후 users 테이블 (state 값 증가)
+sqlite> select * from users where id = 'peerorg1Admin';
+
+peerorg1Admin|$2a$10$qJYiRYvGvRbZWpDOeF3ikeEpFbUOD42jMVgA5.MDPfZGGP7FeQ5R2|client|peerorg1|[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}]|1|-1|2|0
+
+2-2) enroll 후 certificates 테이블
+sqlite> select * from certificates where id = 'peerorg1Admin';
+
+peerorg1Admin|245776744131a9bdb0a840493453a423bc843fd0|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:29:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVjCCAf2gAwIBAgIUJFd2dEExqb2wqEBJNFOkI7yEP9AwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNDAw
+WhcNMjAwODE5MDYyOTAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABBU0zB16xtI0dzZQj6QfeKZV6I1r5Ctx5faE7zMdbHDUXkmFb4eHEnC+
+UfBe4XKNLV6AjHzGvT33pFSmLhARuTWjgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFO9Zwg9eqwxLhFqo1WAFtdJZuXdJMB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNHADBEAiAW0jrH9m/ZnJMwhl3WRwYOSiFckLW+9uIuCYMw3g/6fAIgOucH3Lwi
+KBGoP899Ci83NrgyOdX3Lic0/6ZEr7FYMvU=
+-----END CERTIFICATE-----
+|1
+
+
+3-1) enroll (2번째) 후 users 테이블 (state 값 증가)
+sqlite> select * from users where id = 'peerorg1Admin';
+
+peerorg1Admin|$2a$10$qJYiRYvGvRbZWpDOeF3ikeEpFbUOD42jMVgA5.MDPfZGGP7FeQ5R2|client|peerorg1|[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}]|2|-1|2|0
+
+3-2) enroll 후 certificates 테이블
+sqlite> select * from certificates where id = 'peerorg1Admin';
+
+peerorg1Admin|245776744131a9bdb0a840493453a423bc843fd0|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:29:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVjCCAf2gAwIBAgIUJFd2dEExqb2wqEBJNFOkI7yEP9AwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNDAw
+WhcNMjAwODE5MDYyOTAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABBU0zB16xtI0dzZQj6QfeKZV6I1r5Ctx5faE7zMdbHDUXkmFb4eHEnC+
+UfBe4XKNLV6AjHzGvT33pFSmLhARuTWjgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFO9Zwg9eqwxLhFqo1WAFtdJZuXdJMB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNHADBEAiAW0jrH9m/ZnJMwhl3WRwYOSiFckLW+9uIuCYMw3g/6fAIgOucH3Lwi
+KBGoP899Ci83NrgyOdX3Lic0/6ZEr7FYMvU=
+-----END CERTIFICATE-----
+|1
+peerorg1Admin|1d62331ace870541b4518f676df1a564e2ac6d29|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:30:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVjCCAf2gAwIBAgIUHWIzGs6HBUG0UY9nbfGlZOKsbSkwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNTAw
+WhcNMjAwODE5MDYzMDAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABC1j/qQKpShIR4UoMplopN1b+TWgQkM0Xb9IV8a6bYGUezk5vBAQVIAF
+fEGsCtISCqV2050qZ7TtP4VUt0Q88I+jgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFFda67bo/Xegry8kQceU+CNvW7t3MB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNHADBEAiAvdMthaWF/svyuGWfV3ZD+gv1Yl5h7TD8sXQEfCbn/EAIgakxd1ZZA
+ocyfJ2u4yhzMij8ESxCUzunV49gasyo1Ovw=
+-----END CERTIFICATE-----
+|1
+
+
+3-1) reenroll 후 users 테이블 (state 값 변경 X)
+sqlite> select * from users where id = 'peerorg1Admin';
+
+peerorg1Admin|$2a$10$qJYiRYvGvRbZWpDOeF3ikeEpFbUOD42jMVgA5.MDPfZGGP7FeQ5R2|client|peerorg1|[{"name":"hf.Registrar.Roles","value":"*"},{"name":"hf.Registrar.DelegateRoles","value":"*"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.GenCRL","value":"1"},{"name":"hf.Revoker","value":"1"},{"name":"hf.AffiliationMgr","value":"1"},{"name":"hf.IntermediateCA","value":"1"},{"name":"hf.EnrollmentID","value":"peerorg1Admin","ecert":true},{"name":"hf.Type","value":"client","ecert":true},{"name":"hf.Affiliation","value":"peerorg1","ecert":true}]|2|-1|2|0
+
+3-2) reenroll 후 certificates 테이블
+sqlite> select * from certificates where id = 'peerorg1Admin';
+
+peerorg1Admin|245776744131a9bdb0a840493453a423bc843fd0|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:29:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVjCCAf2gAwIBAgIUJFd2dEExqb2wqEBJNFOkI7yEP9AwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNDAw
+WhcNMjAwODE5MDYyOTAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABBU0zB16xtI0dzZQj6QfeKZV6I1r5Ctx5faE7zMdbHDUXkmFb4eHEnC+
+UfBe4XKNLV6AjHzGvT33pFSmLhARuTWjgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFO9Zwg9eqwxLhFqo1WAFtdJZuXdJMB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNHADBEAiAW0jrH9m/ZnJMwhl3WRwYOSiFckLW+9uIuCYMw3g/6fAIgOucH3Lwi
+KBGoP899Ci83NrgyOdX3Lic0/6ZEr7FYMvU=
+-----END CERTIFICATE-----
+|1
+peerorg1Admin|1d62331ace870541b4518f676df1a564e2ac6d29|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:30:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVjCCAf2gAwIBAgIUHWIzGs6HBUG0UY9nbfGlZOKsbSkwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNTAw
+WhcNMjAwODE5MDYzMDAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABC1j/qQKpShIR4UoMplopN1b+TWgQkM0Xb9IV8a6bYGUezk5vBAQVIAF
+fEGsCtISCqV2050qZ7TtP4VUt0Q88I+jgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFFda67bo/Xegry8kQceU+CNvW7t3MB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNHADBEAiAvdMthaWF/svyuGWfV3ZD+gv1Yl5h7TD8sXQEfCbn/EAIgakxd1ZZA
+ocyfJ2u4yhzMij8ESxCUzunV49gasyo1Ovw=
+-----END CERTIFICATE-----
+|1
+peerorg1Admin|6f64fa634dd4fce2e5aa12d5092b6032cdc6967c|a32dc33ae71a6c8f27219bc8f4eb2c41fb9d8e88||good|0|2020-08-19 06:31:00+00:00|0001-01-01 00:00:00+00:00|-----BEGIN CERTIFICATE-----
+MIICVzCCAf2gAwIBAgIUb2T6Y03U/OLlqhLVCStgMs3GlnwwCgYIKoZIzj0EAwIw
+TzELMAkGA1UEBhMCS1IxFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZG
+YWJyaWMxGTAXBgNVBAMTEGZhYnJpYy1jYS1zZXJ2ZXIwHhcNMTkwODIwMDYyNjAw
+WhcNMjAwODE5MDYzMTAwWjA6MSAwDQYDVQQLEwZjbGllbnQwDwYDVQQLEwhwZWVy
+b3JnMTEWMBQGA1UEAxMNcGVlcm9yZzFBZG1pbjBZMBMGByqGSM49AgEGCCqGSM49
+AwEHA0IABBU0zB16xtI0dzZQj6QfeKZV6I1r5Ctx5faE7zMdbHDUXkmFb4eHEnC+
+UfBe4XKNLV6AjHzGvT33pFSmLhARuTWjgcswgcgwDgYDVR0PAQH/BAQDAgeAMAwG
+A1UdEwEB/wQCMAAwHQYDVR0OBBYEFO9Zwg9eqwxLhFqo1WAFtdJZuXdJMB8GA1Ud
+IwQYMBaAFKMtwzrnGmyPJyGbyPTrLEH7nY6IMGgGCCoDBAUGBwgBBFx7ImF0dHJz
+Ijp7ImhmLkFmZmlsaWF0aW9uIjoicGVlcm9yZzEiLCJoZi5FbnJvbGxtZW50SUQi
+OiJwZWVyb3JnMUFkbWluIiwiaGYuVHlwZSI6ImNsaWVudCJ9fTAKBggqhkjOPQQD
+AgNIADBFAiEA5/r/pRg8SU73wX/H3lTXv+3WpkYp4c0IAighREuB77kCIEBsPYAr
+aqEqNnyUsY198q4174RE10yrBKGEiNnJFcJQ
+-----END CERTIFICATE-----
+|1
+
+

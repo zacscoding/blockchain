@@ -115,6 +115,13 @@ public class FabricCertClient {
                                        String password, String affiliation, List<Attribute> attributes)
             throws Exception {
 
+        return registerNewIdentity(caClient, enrollment, type, name, password, affiliation, attributes, -1);
+    }
+
+    public boolean registerNewIdentity(HFCAClient caClient, Enrollment enrollment, String type, String name,
+                                       String password, String affiliation, List<Attribute> attributes,
+                                       int maxEnrollments) throws Exception {
+
         requireNonNull(caClient, "caClient");
         requireNonNull(enrollment, "enrollment");
         requireNonNull(password, "password");
@@ -123,6 +130,7 @@ public class FabricCertClient {
 
         rr.setType(type);
         rr.setSecret(password);
+        rr.setMaxEnrollments(maxEnrollments);
 
         if (attributes != null && !attributes.isEmpty()) {
             for (Attribute attribute : attributes) {
@@ -165,7 +173,6 @@ public class FabricCertClient {
 
         return caClient.enroll(enrollmentId, enrollmentSecret, request);
     }
-
 
     public List<HFCAX509Certificate> getCertificates(HFCAClient caClient, Enrollment enrollment,
                                                      HFCACertificateRequest requestFilter) throws Exception {

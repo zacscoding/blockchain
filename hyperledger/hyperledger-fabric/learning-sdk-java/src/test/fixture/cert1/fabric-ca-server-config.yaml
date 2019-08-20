@@ -267,6 +267,7 @@ signing:
     usage:
       - digital signature
     expiry: 8760h
+    # expiry: 1m
     # expiry: 43800h
   profiles:
     ca:

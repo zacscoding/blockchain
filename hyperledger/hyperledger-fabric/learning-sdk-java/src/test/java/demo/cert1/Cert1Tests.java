@@ -2,6 +2,8 @@ package demo.cert1;
 
 import static demo.fabric.constant.FabricConstants.ADMIN_ATTRIBUTES;
 import static demo.fabric.constant.FabricConstants.CLIENT_IDENTITY_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -37,7 +39,6 @@ import demo.common.TestHelper;
 import demo.fabric.client.FabricCertClient;
 import demo.fabric.client.FabricClientFactory;
 import demo.fabric.dto.FabricUserContext;
-import demo.fabric.util.FabricCertParser;
 
 /**
  *
@@ -91,6 +92,7 @@ public class Cert1Tests {
         TestHelper.out("> cert chain : \n%s", certChain);
     }
 
+    // affiliation 추가 | identity 추가 | enroll | reenroll | revoke | reenroll
     @Test
     public void registerAffAndIdentityAndEnrollment() throws Exception {
         FabricUserContext peerorg1Admin = FabricUserContext.builder()
@@ -157,11 +159,170 @@ public class Cert1Tests {
         TestHelper.out(peerorg1Admin.getEnrollment().getCert());
         displayX509CertString(enrollment.getCert());
 
-        // 4) update enrollment
-        TestHelper.out("> After reenroll..");
+        // 5) reenroll
+        TestHelper.out("## Try to reenroll cert");
+        Enrollment tempCert = caClient.reenroll(peerorg1Admin);
+        displayX509CertString(tempCert.getCert());
+        TestHelper.out("> Success to reenroll");
+
+        // 4) revoke
+        caClient.revoke(caAdmin, tempCert, "Reason from revoke request");
+        TestHelper.out("> Success to revoke..");
+
+        // 5) reenroll
+        TestHelper.out("## Try to reenroll after revoke another cert");
         Enrollment reenroll = caClient.reenroll(peerorg1Admin);
-        TestHelper.out(reenroll.getCert());
+        TestHelper.out("> Success to reenroll");
         displayX509CertString(reenroll.getCert());
+    }
+
+    // affiliation 추가 | identity 추가 | enroll1 | enroll2 | revoke enroll2 | enroll3
+    @Test
+    public void registerAndEnrollAndRevoke() throws Exception {
+        FabricUserContext peerorg1Admin = FabricUserContext.builder()
+                                                           .name("peerorg1Admin")
+                                                           .password("passpw")
+                                                           .affiliation("peerorg1")
+                                                           .build();
+
+        createAffiliationAndRegister(peerorg1Admin);
+        // 3) enroll
+        Enrollment enrollment = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                                  peerorg1Admin.getEnrollmentSecret());
+        peerorg1Admin.setEnrollment(enrollment);
+        TestHelper.out(">> First enroll..");
+        displayX509CertString(enrollment.getCert());
+
+        // 4) enroll again
+        Enrollment enrollment2 = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                                   peerorg1Admin.getEnrollmentSecret());
+        TestHelper.out(">> Second enroll..");
+        displayX509CertString(enrollment2.getCert());
+
+        // 4) revoke
+        caClient.revoke(caAdmin, enrollment, "Reason from revoke request");
+        TestHelper.out("> Success to revoke..");
+
+        Enrollment enrollment3 = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                                   peerorg1Admin.getEnrollmentSecret());
+        TestHelper.out(">> Third enroll..");
+        displayX509CertString(enrollment3.getCert());
+    }
+
+    // enroll1 | enroll2(fail) | reenroll1
+    @Test
+    public void testMaxEnrollments() throws Exception {
+        FabricUserContext peerorg1Admin = FabricUserContext.builder()
+                                                           .name("peerorg1Admin")
+                                                           .password("passpw")
+                                                           .affiliation("peerorg1")
+                                                           .build();
+
+        createAffiliationAndRegister(peerorg1Admin);
+
+        // enroll
+        TestHelper.out("## Try to enroll");
+        Enrollment enroll = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                              peerorg1Admin.getEnrollmentSecret());
+        peerorg1Admin.setEnrollment(enroll);
+        TestHelper.out("> Success to enroll");
+        displayX509CertString(enroll.getCert());
+
+        try {
+            certClient.enroll(caClient, peerorg1Admin.getName(),
+                              peerorg1Admin.getEnrollmentSecret());
+            fail();
+        } catch (Exception e) {
+            TestHelper.out("Failed to enroll");
+            e.printStackTrace();
+        }
+
+        TestHelper.out("## Try to reenroll");
+        Enrollment reenroll = caClient.reenroll(peerorg1Admin);
+        TestHelper.out("## success to reenroll");
+        displayX509CertString(reenroll.getCert());
+    }
+
+    @Test
+    public void compareEnrollAndReEnroll() throws Exception {
+        FabricUserContext peerorg1Admin = FabricUserContext.builder()
+                                                           .name("peerorg1Admin")
+                                                           .password("passpw")
+                                                           .affiliation("peerorg1")
+                                                           .build();
+
+        createAffiliationAndRegister(peerorg1Admin);
+
+        TestHelper.out("## Try to enroll");
+        Enrollment enroll = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                              peerorg1Admin.getEnrollmentSecret());
+        peerorg1Admin.setEnrollment(enroll);
+        Optional<HFCAIdentity> identityOptional = certClient.getIdentityByName(
+                caClient,
+                peerorg1Admin.getEnrollment(),
+                peerorg1Admin.getName()
+        );
+        assertThat(identityOptional.isPresent()).isTrue();
+
+        TestHelper.out("> success to enroll");
+        displayX509CertString(enroll.getCert());
+
+        TestHelper.out("## Try to enroll again");
+        Enrollment enroll2 = certClient.enroll(caClient, peerorg1Admin.getName(),
+                                               peerorg1Admin.getEnrollmentSecret());
+        TestHelper.out("> success to enroll");
+        displayX509CertString(enroll2.getCert());
+
+        TestHelper.out("## Try to reenroll");
+        Enrollment enroll3 = caClient.reenroll(peerorg1Admin);
+        TestHelper.out("> success to reenroll");
+        displayX509CertString(enroll3.getCert());
+    }
+
+    private void createAffiliationAndRegister(FabricUserContext fabricUserContext) throws Exception {
+        // 1) affiliation 추가
+        TestHelper.out("## Check affilication > %s", fabricUserContext.getAffiliation());
+        Optional<HFCAAffiliation> affOptional = certClient.getAffiliationByName(
+                caClient,
+                caAdmin.getEnrollment(),
+                fabricUserContext.getAffiliation()
+        );
+
+        if (!affOptional.isPresent()) {
+            TestHelper.out("> Try to create new affiliation");
+            certClient.createNewAffiliation(
+                    caClient, caAdmin.getEnrollment(), fabricUserContext.getAffiliation()
+            );
+        } else {
+            TestHelper.out("> Already exist");
+        }
+
+        // 2) identity 추가
+        TestHelper.out("## Try to check identity %s", fabricUserContext.getName());
+        Optional<HFCAIdentity> identityOptional = certClient.getIdentityByName(
+                caClient,
+                caAdmin.getEnrollment(),
+                fabricUserContext.getName());
+
+        if (!identityOptional.isPresent()) {
+            TestHelper.out("> not exist. will register");
+            boolean result = certClient.registerNewIdentity(caClient,
+                                                            caAdmin.getEnrollment(),
+                                                            CLIENT_IDENTITY_TYPE,
+                                                            fabricUserContext.getName(),
+                                                            fabricUserContext.getPassword(),
+                                                            fabricUserContext.getAffiliation(),
+                                                            ADMIN_ATTRIBUTES);
+
+            if (result) {
+                fabricUserContext.setEnrollmentSecret(fabricUserContext.getPassword());
+            }
+
+            TestHelper.out(">> Identity result > " + result);
+        } else {
+            TestHelper.out("> Already exist identity");
+            fabricUserContext.setEnrollmentSecret(fabricUserContext.getPassword());
+        }
     }
 
     private void displayX509Cert(X509Certificate cert) {
@@ -209,5 +370,4 @@ public class Cert1Tests {
         CryptoSuite cryptoSuite = Factory.getCryptoSuite();
         // String csr = cryptoSuite.generateCertificationRequest(user, keypair);
     }
-
 }
