@@ -2,9 +2,11 @@ package demo.fabric.client;
 
 import java.util.Properties;
 
+import org.hyperledger.fabric.sdk.HFClient;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 
+import demo.fabric.dto.FabricUserContext;
 import demo.fabric.exception.FabricClientCreateException;
 
 /**
@@ -68,6 +70,35 @@ public class FabricClientFactory {
             HFCAClient caClient = HFCAClient.createNewInstance(caName, caLocation, properties);
             caClient.setCryptoSuite(cryptoSuite);
             return caClient;
+        } catch (Exception e) {
+            throw new FabricClientCreateException(e);
+        }
+    }
+
+    /**
+     * 기본 HFClient 생성
+     */
+    public static HFClient createHFClient() throws FabricClientCreateException {
+        return createHFClient(null);
+    }
+
+    /**
+     * 기본 HFClient + user context 생성
+     */
+    public static HFClient createHFClient(FabricUserContext fabricUserContext)
+            throws FabricClientCreateException {
+
+        try {
+            CryptoSuite cryptoSuite = CryptoSuite.Factory.getCryptoSuite();
+
+            HFClient client = HFClient.createNewInstance();
+            client.setCryptoSuite(cryptoSuite);
+
+            if (fabricUserContext != null) {
+                client.setUserContext(fabricUserContext);
+            }
+
+            return client;
         } catch (Exception e) {
             throw new FabricClientCreateException(e);
         }

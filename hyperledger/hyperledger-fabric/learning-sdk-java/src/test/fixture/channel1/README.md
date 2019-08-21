@@ -1,4 +1,18 @@
-# 채널1 Fixture
+# 채널1 Fixture  
+
+> cert 생성  
+
+$ ./cert-gen.sh  
+
+> channel material 생성  
+
+$ ./ch-gen.sh  
+
+> fabric network 구축  
+
+$ ./compose.sh restart  
+
+---  
 
 ## Certs
 

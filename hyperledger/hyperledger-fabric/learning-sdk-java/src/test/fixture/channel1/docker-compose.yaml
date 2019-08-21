@@ -13,7 +13,7 @@ services:
     container_name: configtxlator
     network_mode: host
 
-    ## Zookeeper
+  ## Zookeeper
   zookeeper0.example.com:
     container_name: zookeeper0.example.com
     image: hyperledger/fabric-zookeeper:${IMAGE_TAG_FABRIC_ZOOKEEPER}
@@ -133,3 +133,23 @@ services:
       - ./crypto-config/peerOrganizations/peerorg1.example.com/peers/peer0.peerorg1.example.com:/etc/hyperledger/msp/peer:ro
     ports:
       - 7051:7051
+
+  # peer1 - PeerOrg2
+  peer1.peerorg2.example.com:
+    container_name: peer1.peerorg2.example.com
+    extends:
+      file: peer-base/peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.peerorg2.example.com
+      - CORE_PEER_ADDRESS=peer1.peerorg2.example.com:8051
+      - CORE_PEER_LISTENADDRESS=peer1.peerorg2.example.com:8051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.peerorg2.example.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.peerorg2.example.com:8051
+      - CORE_PEER_LOCALMSPID=peerorg2
+    hostname: peer1.peerorg2.example.com
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./crypto-config/peerOrganizations/peerorg2.example.com/peers/peer1.peerorg2.example.com:/etc/hyperledger/msp/peer:ro
+    ports:
+      - 8051:8051
