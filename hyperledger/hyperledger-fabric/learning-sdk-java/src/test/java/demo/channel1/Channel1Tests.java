@@ -1,13 +1,22 @@
 package demo.channel1;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.hyperledger.fabric.sdk.Channel.NOfEvents.createNofEvents;
+import static org.hyperledger.fabric.sdk.Channel.TransactionOptions.createTransactionOptions;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
@@ -16,17 +25,19 @@ import org.hyperledger.fabric.protos.common.Common.Block;
 import org.hyperledger.fabric.protos.common.Common.Envelope;
 import org.hyperledger.fabric.sdk.BlockChecker;
 import org.hyperledger.fabric.sdk.BlockEvent;
+import org.hyperledger.fabric.sdk.ChaincodeEndorsementPolicy;
 import org.hyperledger.fabric.sdk.ChaincodeEvent;
 import org.hyperledger.fabric.sdk.ChaincodeID;
 import org.hyperledger.fabric.sdk.Channel;
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.HFClient;
 import org.hyperledger.fabric.sdk.InstallProposalRequest;
+import org.hyperledger.fabric.sdk.InstantiateProposalRequest;
 import org.hyperledger.fabric.sdk.Peer;
+import org.hyperledger.fabric.sdk.Peer.PeerRole;
 import org.hyperledger.fabric.sdk.ProposalResponse;
 import org.hyperledger.fabric.sdk.TransactionRequest.Type;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
-import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,7 +56,8 @@ import demo.fabric.dto.FabricUserContext;
 import demo.fabric.util.FabricCertParser;
 
 /**
- * Modify from hyperledger fabric-sdk-java
+ * Modified from hyperledger fabric-sdk-java
+ *
  * https://github.com/hyperledger/fabric-sdk-java
  */
 public class Channel1Tests {
@@ -58,10 +70,10 @@ public class Channel1Tests {
     static final String CHANNEL1 = "channel1";
 
     // chain code
-    static final String CHAIN_CODE_FILEPATH = "channel1/gocc/sample1";
+    static final String CHAIN_CODE_FILEPATH = "channel1/gocc/sample2";
     static final String CHAIN_CODE_NAME = "example_cc_go";
+    static final String CHAIN_CODE_PATH = "github.com/example_cc";
     static final String CHAIN_CODE_VERSION = "1";
-    static final String CHAIN_CODE_PATH = "github.com/example01/cmd";
     static final Type CHAIN_CODE_LANG = Type.GO_LANG;
 
     // fabric component
@@ -94,16 +106,19 @@ public class Channel1Tests {
 
     @Test
     public void runTests() throws Exception {
-        // - "channel1" 생성 (to orderers)
-        // - peer 참여 in peerorg1, peerorg2
+        TestHelper.out("####################################################");
+        TestHelper.out("# - \"channel1\" 생성 (to orderers)");
+        TestHelper.out("# - peer 참여 in peerorg1, peerorg2");
         createChannelAndJoinPeers();
+        TestHelper.out("####################################################");
 
-        // - peer1.peerorg1 | peer1.peerorg2 chaincode install
-        // - instantiate chaincode
-        runChannels();
+        TestHelper.out("####################################################");
+        TestHelper.out("# - 체인코드 설치 > peer1.peerorg1 | peer1.peerorg2");
+        runChannel();
+        TestHelper.out("####################################################");
     }
 
-    private void runChannels() throws Exception {
+    private void runChannel() throws Exception {
         /**
          * load channel
          */
@@ -160,8 +175,9 @@ public class Channel1Tests {
                 });
 
         /**
-         * Install chain code
+         * Install chain code to peer org1
          */
+        channel = null;
         HFClient peerOrg1Client = FabricClientFactory.createHFClient(peerorg1.getAdmin());
         Channel loadChannel1 = channelClient.buildChannel(
                 peerOrg1Client, CHANNEL1,
@@ -174,51 +190,26 @@ public class Channel1Tests {
                 )
         );
         loadChannel1.initialize();
-        installChainCode(
-                ChaincodeID.newBuilder()
-                           .setName(CHAIN_CODE_NAME)
-                           .setVersion(CHAIN_CODE_VERSION)
-                           .setPath(CHAIN_CODE_PATH)
-                           .build(),
-                loadChannel1, peerorg1.getAdmin()
-        );
+        ChaincodeID chaincodeID = ChaincodeID.newBuilder()
+                                             .setName(CHAIN_CODE_NAME)
+                                             .setVersion(CHAIN_CODE_VERSION)
+                                             .setPath(CHAIN_CODE_PATH)
+                                             .build();
 
-        HFClient peerOrg2Client = FabricClientFactory.createHFClient(peerorg2.getAdmin());
-        Channel loadChannel2 = channelClient.buildChannel(
-                peerOrg2Client, CHANNEL1,
-                Arrays.asList(
-                        ordererorg1.getOrderers().get(ORDERER1)
-                        , ordererorg2.getOrderers().get(ORDERER1)
-                ),
-                Arrays.asList(
-                        peerorg2.getPeers().get(PEER1)
-                )
-        );
-        loadChannel2.initialize();
-        installChainCode(
-                ChaincodeID.newBuilder()
-                           .setName(CHAIN_CODE_NAME)
-                           .setVersion(CHAIN_CODE_VERSION)
-                           .setPath(CHAIN_CODE_PATH)
-                           .build(),
-                loadChannel2, peerorg2.getAdmin()
-        );
-    }
-
-    private void installChainCode(ChaincodeID chaincodeID, Channel channel, FabricUserContext admin)
-            throws Exception {
-
-        HFClient client = FabricClientFactory.createHFClient(admin);
-
+        /**
+         * Install chain code
+         */
         InstallProposalRequest installProposalRequest = client.newInstallProposalRequest();
         installProposalRequest.setChaincodeID(chaincodeID);
         installProposalRequest.setChaincodeSourceLocation(
-                Paths.get(TEST_FIXTURES_PATH, CHAIN_CODE_FILEPATH).toFile());
+                new File(TEST_FIXTURES_PATH + "/" + CHAIN_CODE_FILEPATH)
+        );
         installProposalRequest.setChaincodeVersion(CHAIN_CODE_VERSION);
         installProposalRequest.setChaincodeLanguage(CHAIN_CODE_LANG);
 
-        TestHelper.out("## Try to send install proposal");
-        Collection<Peer> peers = channel.getPeers();
+        TestHelper.out("## Try to send install proposal with block number %d",
+                       loadChannel1.queryBlockchainInfo().getHeight() - 1L);
+        Collection<Peer> peers = loadChannel1.getPeers();
         int numInstallProposal = peers.size();
 
         Collection<ProposalResponse> responses = client.sendInstallProposal(installProposalRequest, peers);
@@ -236,8 +227,79 @@ public class Channel1Tests {
             }
         }
 
-        TestHelper.out("> try : %d | success : %d | fail : %d",
-                       numInstallProposal, successful.size(), failed.size());
+        TestHelper.out("> try : %d | success : %d | fail : %d | block : %d",
+                       numInstallProposal, successful.size(),
+                       failed.size(), loadChannel1.queryBlockchainInfo().getHeight() - 1L);
+
+        /**
+         * Instantiate chain code
+         */
+        TestHelper.out("####################################################");
+        TestHelper.out("# - 체인코드 인스턴스화 > peer1.peerorg1");
+
+        InstantiateProposalRequest instantiateProposalRequest = client.newInstantiationProposalRequest();
+        instantiateProposalRequest.setProposalWaitTime(120000L);
+        instantiateProposalRequest.setChaincodeID(chaincodeID);
+        instantiateProposalRequest.setChaincodeLanguage(CHAIN_CODE_LANG);
+        instantiateProposalRequest.setFcn("init");
+        instantiateProposalRequest.setArgs("a", "500", "b", "200");
+        Map<String, byte[]> tm = new HashMap<>();
+        tm.put("HyperLedgerFabric", "InstantiateProposalRequest:JavaSDK".getBytes(UTF_8));
+        tm.put("method", "InstantiateProposalRequest".getBytes(UTF_8));
+        instantiateProposalRequest.setTransientMap(tm);
+
+        ChaincodeEndorsementPolicy chaincodeEndorsementPolicy = new ChaincodeEndorsementPolicy();
+        chaincodeEndorsementPolicy.fromYamlFile(
+                new File(TEST_FIXTURES_PATH + "/channel1/chaincodeendorsementpolicy.yaml"));
+        instantiateProposalRequest.setChaincodeEndorsementPolicy(chaincodeEndorsementPolicy);
+
+        TestHelper.out("## Try to send instantiateProposalRequest with a : 500, b : 200");
+
+        successful.clear();
+        failed.clear();
+
+        responses = loadChannel1.sendInstantiationProposal(instantiateProposalRequest, loadChannel1.getPeers());
+
+        for (ProposalResponse response : responses) {
+            if (response.isVerified() && response.getStatus() == ProposalResponse.Status.SUCCESS) {
+                successful.add(response);
+                TestHelper.out(">> success to instantiate proposal response. tx id : %s, peer : %s",
+                               response.getTransactionID(), response.getPeer().getName());
+            } else {
+                failed.add(response);
+                TestHelper.out(">> failed to instantiate : %s", response.getMessage());
+            }
+        }
+
+        if (!failed.isEmpty()) {
+            fail();
+        }
+
+        if (Boolean.TRUE) {
+            return;
+        }
+
+        Channel.NOfEvents nOfEvents = createNofEvents();
+        if (!loadChannel1.getPeers(EnumSet.of(PeerRole.EVENT_SOURCE)).isEmpty()) {
+            nOfEvents.addPeers(loadChannel1.getPeers(EnumSet.of(PeerRole.EVENT_SOURCE)));
+        }
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        loadChannel1.sendTransaction(successful, createTransactionOptions()
+                .userContext(client.getUserContext())
+                .shuffleOrders(false)
+                .orderers(loadChannel1.getOrderers())
+                .nOfEvents(nOfEvents)
+        ).thenApply(transactionEvent -> {
+            TestHelper.out("Finished instantiate tx with %s", transactionEvent.getTransactionID());
+            BlockEvent blockEvent = transactionEvent.getBlockEvent();
+            latch.countDown();
+            return null;
+        });
+
+        latch.await();
+        TestHelper.out("####################################################");
     }
 
     private void createChannelAndJoinPeers() throws Exception {
@@ -295,7 +357,7 @@ public class Channel1Tests {
                                                    Arrays.asList(peerorg2.getPeers().get(PEER1)), null);
     }
 
-    @Test
+    //    @Test
     public void loadSystemChannel() throws Exception {
         HFClient orderer1Client = HFClient.createNewInstance();
         orderer1Client.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());

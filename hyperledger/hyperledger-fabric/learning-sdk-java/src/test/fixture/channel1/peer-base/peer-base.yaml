@@ -7,9 +7,10 @@ services:
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=channelintegration_default
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=channel1_default
       #     - CORE_LOGGING_LEVEL=ERROR
-      - FABRIC_LOGGING_SPEC=WARN
+      # - FABRIC_LOGGING_SPEC=WARN
+      - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG:lifecycle=DEBUG:gossip=INFO:msp.identity=INFO:leveldbhelper=INFO
       - CORE_PEER_ENDORSER_ENABLED=true
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
