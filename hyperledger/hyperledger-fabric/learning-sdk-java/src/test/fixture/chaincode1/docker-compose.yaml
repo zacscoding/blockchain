@@ -10,8 +10,8 @@ services:
       /usr/local/bin/configtxlator start'
     volumes:
       - ./crypto-config/:/opt/gopath/src/github.com/hyperledger/fabric/msp/crypto-config
+      - ./gocc/sample1/src/github.com/example01:/opt/gopath/src/github.com/example01
     container_name: configtxlator
-    network_mode: host
 
   ## Zookeeper
   zookeeper0.example.com:
@@ -134,7 +134,6 @@ services:
       - ./crypto-config/peerOrganizations/peerorg1.example.com/users/Admin@peerorg1.example.com/msp:/etc/hyperledger/admin/msp:ro
       - ./configtx/channel1.tx:/etc/hyperledger/fabric/channel1.tx
       - ./configtx/peerorg1.block:/etc/hyperledger/fabric/peerorg1.block
-      - ./gocc/sample1/src/github.com/example01:/opt/gopath/src/github.com/chaincode/go/example01
     ports:
       - 7051:7051
       - 7052:7052
@@ -159,7 +158,6 @@ services:
       - ./crypto-config/peerOrganizations/peerorg2.example.com/users/Admin@peerorg2.example.com/msp:/etc/hyperledger/admin/msp:ro
       - ./configtx/channel1.tx:/etc/hyperledger/fabric/channel1.tx
       - ./configtx/peerorg2.block:/etc/hyperledger/fabric/peerorg2.block
-      #- ./gocc/sample1/src:/opt/gopath/src
     ports:
       - 8051:8051
       - 8052:8052

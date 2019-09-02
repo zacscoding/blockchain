@@ -7,7 +7,7 @@ services:
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=channel1_default
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=chaincode1_default
       #     - CORE_LOGGING_LEVEL=ERROR
       # - FABRIC_LOGGING_SPEC=WARN
       - FABRIC_LOGGING_SPEC=INFO

@@ -9,6 +9,10 @@ fi
 
 function clean(){
   docker-compose  -f docker-compose.yaml down
+  lines=`docker images | grep 'dev-peer' | grep 'dev-peer' | wc -l`
+  if [[ "$lines" -gt 0 ]]; then
+    docker images | grep 'dev-peer' | awk '{print $1}' | xargs docker rmi -f
+  fi
   deleteZookeeperAndKafkaMeta
 }
 
