@@ -1,6 +1,7 @@
 package org.demo.smartcontract;
 
 import com.google.common.io.Files;
+import io.reactivex.disposables.Disposable;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,12 +26,9 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
-import rx.Subscription;
 
 /**
  * @author zacconding
- * @Date 2018-11-23
- * @GitHub : https://github.com/zacscoding
  */
 public class SmartContractSearchTest {
 
@@ -134,7 +132,7 @@ public class SmartContractSearchTest {
             DefaultBlockParameterName.LATEST, "0x282d74cC2203E5C19b522876cA6FdeE59d3b800b");
         //ethFilter.addSingleTopic("logFileAddedStatus");
 
-        Subscription subscription = web3j.ethLogObservable(ethFilter).subscribe(log -> {
+        Disposable subscription = web3j.ethLogFlowable(ethFilter).subscribe(log -> {
             countDownLatch.countDown();
             SimpleLogger.build()
                 .appendln("block number : {}", log.getBlockNumber())
@@ -145,7 +143,7 @@ public class SmartContractSearchTest {
         });
 
         countDownLatch.await();
-        subscription.isUnsubscribed();
+        subscription.dispose();
     }
 
     @Test

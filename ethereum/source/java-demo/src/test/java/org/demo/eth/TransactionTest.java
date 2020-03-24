@@ -1,5 +1,6 @@
 package org.demo.eth;
 
+import io.reactivex.disposables.Disposable;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -9,7 +10,12 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.demo.AbstractTestRunner;
+import org.demo.util.GsonUtil;
+import org.demo.util.LogLevelUtil;
+import org.demo.util.SimpleLogger;
 import org.junit.Test;
+import org.reactivestreams.Subscription;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.filters.Callback;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
@@ -18,19 +24,10 @@ import org.web3j.protocol.core.methods.response.EthLog.Hash;
 import org.web3j.protocol.core.methods.response.EthLog.LogResult;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.demo.AbstractTestRunner;
-import org.demo.util.GsonUtil;
-import org.demo.util.LogLevelUtil;
-import org.demo.util.SimpleLogger;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Convert.Unit;
 import org.web3j.utils.Numeric;
-import rx.Subscription;
 
 /**
  * @author zacconding
- * @Date 2018-05-01
- * @GitHub : https://github.com/zacscoding
  */
 public class TransactionTest extends AbstractTestRunner {
 
@@ -50,7 +47,7 @@ public class TransactionTest extends AbstractTestRunner {
 
     @Test
     public void pendingTxns() throws Exception {
-        Subscription txSubscription = web3j.pendingTransactionObservable().subscribe(tx -> {
+        Disposable txSubscription = web3j.pendingTransactionFlowable().subscribe(tx -> {
             try {
                 SimpleLogger logger = SimpleLogger.build();
                 logger.appendRepeat(10, "==").append(" Receive tx : {} ", tx.getHash()).appendRepeat(10, "==").newLine();
@@ -65,13 +62,11 @@ public class TransactionTest extends AbstractTestRunner {
             }
         }, error -> {
             error.printStackTrace();
-        }, () -> {
-            SimpleLogger.println("Complete...");
         });
 
         TimeUnit.MINUTES.sleep(1);
         SimpleLogger.info("@@ end..");
-        txSubscription.unsubscribe();
+        txSubscription.dispose();
     }
 
     @Test
@@ -84,15 +79,15 @@ public class TransactionTest extends AbstractTestRunner {
         Runnable runnable = () -> {
             try {
                 List<LogResult> results = web3j.ethGetFilterChanges(filterId).send().getLogs();
-                if(results.size() > 0) {
+                if (results.size() > 0) {
                     System.out.println("## Response log result : " + results.size());
 
-                    for(LogResult result : results) {
-                        Hash hash = (Hash)result;
+                    for (LogResult result : results) {
+                        Hash hash = (Hash) result;
                         System.out.println("## Receive hash : " + hash.get());
                     }
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         };
@@ -123,10 +118,10 @@ public class TransactionTest extends AbstractTestRunner {
             long blockNumber = block.getNumber().longValue();
             String gasUsed = String.format("%.2f", block.getGasUsed().doubleValue() / block.getGasLimit().doubleValue() * 100.0D);
             SimpleLogger.build()
-                        .appendln("## number : {} | #tx : {} | index : {} | diff : {} | gas limit : {} | gas used : {} ({}%)"
-                            , blockNumber, block.getTransactions().size(), blockNumber % 5, block.getDifficulty().toString(10)
-                            , block.getGasLimit().toString(10), block.getGasUsed().toString(10), gasUsed)
-                        .flush();
+                .appendln("## number : {} | #tx : {} | index : {} | diff : {} | gas limit : {} | gas used : {} ({}%)"
+                    , blockNumber, block.getTransactions().size(), blockNumber % 5, block.getDifficulty().toString(10)
+                    , block.getGasLimit().toString(10), block.getGasUsed().toString(10), gasUsed)
+                .flush();
             txCount += block.getTransactions().size();
             startNumber = startNumber.subtract(BigInteger.ONE);
         }
@@ -153,7 +148,7 @@ public class TransactionTest extends AbstractTestRunner {
         LogLevelUtil.setInfo();
 
         Set<String> pendings = new HashSet<>();
-        Subscription subscription = web3j.pendingTransactionObservable().subscribe(pendingTx -> {
+        Disposable subscription = web3j.pendingTransactionFlowable().subscribe(pendingTx -> {
             pendings.add(pendingTx.getHash());
             System.out.println("## Receive pending tx : " + pendingTx.getHash());
         });
@@ -182,7 +177,7 @@ public class TransactionTest extends AbstractTestRunner {
         TimeUnit.MINUTES.sleep(2);
         SimpleLogger.info("@@ end..");
 
-        subscription.unsubscribe();
+        subscription.dispose();
     }
 
     @Test

@@ -4,17 +4,15 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import org.demo.util.SimpleLogger;
 import org.junit.Test;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.websocket.WebSocketClient;
 import org.web3j.protocol.websocket.WebSocketListener;
 import org.web3j.protocol.websocket.WebSocketService;
-import org.demo.util.SimpleLogger;
 
 /**
  * @author zacconding
- * @Date 2018-07-30
- * @GitHub : https://github.com/zacscoding
  */
 public class Web3jWebsocketTest {
 
@@ -46,7 +44,7 @@ public class Web3jWebsocketTest {
 
             Web3j web3j = Web3j.build(webSocketService);
 
-            web3j.blockObservable(false).subscribe(onNext -> {
+            web3j.blockFlowable(false).subscribe(onNext -> {
                 SimpleLogger.println("## Receive new block : {}({})", onNext.getBlock().getNumber(), onNext.getBlock().getHash());
             }, onError -> {
                 System.out.println("observer error");
@@ -81,9 +79,9 @@ public class Web3jWebsocketTest {
             webSocketService.connect();
             Web3j web3j = Web3j.build(webSocketService);
             System.out.println("## best block : " + web3j.ethBlockNumber().send().getBlockNumber());
-        } catch(Exception e) {
-            System.out.println("## Failed to connect : "  + url + " ===> " + e.getMessage());
-            if(client != null) {
+        } catch (Exception e) {
+            System.out.println("## Failed to connect : " + url + " ===> " + e.getMessage());
+            if (client != null) {
                 client.close();
             }
         }

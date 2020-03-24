@@ -1,24 +1,22 @@
 package org.demo.eth;
 
+import io.reactivex.disposables.Disposable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.demo.AbstractTestRunner;
+import org.demo.util.LogLevelUtil;
+import org.demo.util.SimpleLogger;
 import org.junit.Test;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.EthLog.Hash;
 import org.web3j.protocol.core.methods.response.EthLog.LogResult;
-import org.demo.AbstractTestRunner;
-import org.demo.util.LogLevelUtil;
-import org.demo.util.SimpleLogger;
-import rx.Subscription;
 
 /**
  * @author zacconding
- * @Date 2018-05-01
- * @GitHub : https://github.com/zacscoding
  */
 public class BlockTest extends AbstractTestRunner {
 
@@ -30,14 +28,14 @@ public class BlockTest extends AbstractTestRunner {
 
     @Test
     public void temp() throws Exception {
-        Subscription subscription = web3j.replayBlocksObservable(
+        Disposable subscribe = web3j.replayPastBlocksFlowable(
             DefaultBlockParameter.valueOf(BigInteger.ONE),
             DefaultBlockParameter.valueOf(BigInteger.valueOf(3)), false).subscribe(blk -> {
             SimpleLogger.println("## Receive {} => {}", blk.getBlock().getHash(), blk.getBlock().getHash());
         });
 
         Thread.sleep(3000L);
-        subscription.unsubscribe();
+        subscribe.dispose();
     }
 
     @Test
@@ -62,7 +60,8 @@ public class BlockTest extends AbstractTestRunner {
         int size = lastRangeNumber.subtract(startRangeNumber).intValue();
 
         for (int i = 0; i < size; i++) {
-            Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true).send().getBlock();
+            Block block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(lastRangeNumber.subtract(BigInteger.valueOf(i))), true)
+                .send().getBlock();
             // SimpleLogger.println("{} => {}", block.getNumber().toString(10), block.getUncles().size());
             SimpleLogger.println("{} | {} => {}", block.getNumber(), block.getMiner(), block.getDifficulty().toString(10));
             //SimpleLogger.printJSONPretty(block);
@@ -108,7 +107,8 @@ public class BlockTest extends AbstractTestRunner {
             BigInteger delta = gasLimit.subtract(prevGasLimit);
             long newGasLimit = Math.max(125000, (prevGasLimit.longValue() * (1024 - 1) + (prevGasUsed.intValue() * 6 / 5)) / 1024);
             SimpleLogger.println("Block {} > gas limit : {} | gas used : {} ({}%) | delta : {} > expected : {} | diff : {}"
-            , i, gasLimit.toString(10), block.getGasUsed().toString(10), gasUsed, delta.toString(10) , newGasLimit, gasLimit.longValue() - newGasLimit);
+                , i, gasLimit.toString(10), block.getGasUsed().toString(10), gasUsed, delta.toString(10), newGasLimit,
+                gasLimit.longValue() - newGasLimit);
             prevGasLimit = gasLimit;
             prevGasUsed = block.getGasUsed();
         }

@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import org.demo.util.SimpleLogger;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.CallTransaction.Function;
 import org.ethereum.core.CallTransaction.Param;
@@ -17,12 +18,11 @@ import org.ethereum.solidity.compiler.CompilationResult;
 import org.ethereum.solidity.compiler.SolidityCompiler;
 import org.junit.Test;
 import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.datatypes.AbiTypes;
 import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Bytes;
-import org.web3j.abi.datatypes.generated.AbiTypes;
 import org.web3j.abi.datatypes.generated.Bytes2;
 import org.web3j.utils.Numeric;
-import org.demo.util.SimpleLogger;
 
 /**
  * https://github.com/ether-camp/solcJ
@@ -84,14 +84,14 @@ public class SolidityCompileTest {
         CallTransaction.Contract contract = new CallTransaction.Contract(contractMetadata.abi);
         for (Function function : contract.functions) {
             SimpleLogger.build()
-                        .appendln("## Check functions.. {}", function.toString())
-                        .appendln("function.type : {} | function.inputs.length : {}", function.type, function.inputs.length)
-                        .flush();
+                .appendln("## Check functions.. {}", function.toString())
+                .appendln("function.type : {} | function.inputs.length : {}", function.type, function.inputs.length)
+                .flush();
 
             int i = 0;
             for (Param input : function.inputs) {
                 SimpleLogger.println("#{} ==> input.name : {} | input.type : {} | input.indexed : {} | input.getType() : {}"
-                    , i++,input.name, input.type, input.indexed, input.getType());
+                    , i++, input.name, input.type, input.indexed, input.getType());
             }
         }
     }
@@ -126,7 +126,8 @@ public class SolidityCompileTest {
         for (String hexValue : hexValues) {
             byte[] bytes = Numeric.hexStringToByteArray(hexValue);
             Bytes wrapper = (Bytes) AbiTypes.getType("bytes" + bytes.length).getConstructor(byte[].class).newInstance(bytes);
-            SimpleLogger.println("## Check : {} >> Bytes : {} >> wrapper : {}", hexValue, Arrays.toString(bytes), wrapper.getClass().getName());
+            SimpleLogger
+                .println("## Check : {} >> Bytes : {} >> wrapper : {}", hexValue, Arrays.toString(bytes), wrapper.getClass().getName());
         }
 
 //        output

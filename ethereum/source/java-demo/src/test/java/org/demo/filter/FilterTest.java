@@ -1,5 +1,6 @@
 package org.demo.filter;
 
+import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +13,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+import org.demo.AbstractTestRunner;
+import org.demo.util.LogLevelUtil;
+import org.demo.util.SimpleLogger;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +31,9 @@ import org.web3j.protocol.core.filters.BlockFilter;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
-import org.demo.AbstractTestRunner;
-import org.demo.util.LogLevelUtil;
-import org.demo.util.SimpleLogger;
-import rx.Subscription;
 
 /**
  * @author zacconding
- * @Date 2018-05-15
- * @GitHub : https://github.com/zacscoding
  */
 public class FilterTest extends AbstractTestRunner {
 
@@ -97,31 +95,42 @@ public class FilterTest extends AbstractTestRunner {
         Map<String, Event> eventMap = new HashMap<>();
         Event changeUserEvent = new Event("ChangeUserEvent",
             Arrays.asList(
-                new TypeReference<Utf8String>() {}
-                , new TypeReference<Address>() {}
-                , new TypeReference<Utf8String>() {}
-                , new TypeReference<Address>() {}
-                , new TypeReference<Utf8String>() {}
-                , new TypeReference<Utf8String>() {}
+                new TypeReference<Utf8String>() {
+                }
+                , new TypeReference<Address>() {
+                }
+                , new TypeReference<Utf8String>() {
+                }
+                , new TypeReference<Address>() {
+                }
+                , new TypeReference<Utf8String>() {
+                }
+                , new TypeReference<Utf8String>() {
+                }
             ));
         eventMap.put(EventEncoder.encode(changeUserEvent), changeUserEvent);
 
         Event changeOwnerEvent = new Event("ChangeOwnerEvent",
             Arrays.asList(
-                new TypeReference<Utf8String>() {}
-                , new TypeReference<Address>() {}
-                , new TypeReference<Utf8String>() {}
-                , new TypeReference<Address>() {}
+                new TypeReference<Utf8String>() {
+                }
+                , new TypeReference<Address>() {
+                }
+                , new TypeReference<Utf8String>() {
+                }
+                , new TypeReference<Address>() {
+                }
             ));
         eventMap.put(EventEncoder.encode(changeOwnerEvent), changeOwnerEvent);
 
         Event testLogEvent = new Event("TestLog",
             Arrays.asList(
-                new TypeReference<Address>() {}
+                new TypeReference<Address>() {
+                }
             ));
         eventMap.put(EventEncoder.encode(testLogEvent), testLogEvent);
 
-        Subscription subscription = web3j.ethLogObservable(filter).subscribe((log -> {
+        Disposable subscription = web3j.ethLogFlowable(filter).subscribe((log -> {
             StringBuilder topics = new StringBuilder();
             SimpleLogger.println("## New block : {}({}) -> Tx : {}"
                 , log.getBlockNumber().toString(16), log.getBlockHash(), log.getTransactionHash());
@@ -129,7 +138,8 @@ public class FilterTest extends AbstractTestRunner {
             for (String topic : log.getTopics()) {
                 Event event = eventMap.get(topic);
                 List<Type> results = FunctionReturnDecoder.decode(log.getData(), event.getNonIndexedParameters());
-                String title = "\t===================================" + "(" + event.getName() + ")  " + topic + "===================================";
+                String title =
+                    "\t===================================" + "(" + event.getName() + ")  " + topic + "===================================";
                 String titleEnd = String.format("\t%" + title.length() + "s\n\n", "").replace(' ', '=');
                 System.out.println(title);
                 for (Type result : results) {
@@ -142,7 +152,7 @@ public class FilterTest extends AbstractTestRunner {
         }), error -> error.printStackTrace());
 
         countDownLatch.await();
-        subscription.unsubscribe();
+        subscription.dispose();
     }
 
     @Test
@@ -220,7 +230,7 @@ public class FilterTest extends AbstractTestRunner {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
         pendingTxFilter.run(service, blockTime);
 
-        Subscription subscription = web3j.pendingTransactionObservable().subscribe(tx -> {
+        Disposable subscription = web3j.pendingTransactionFlowable().subscribe(tx -> {
             observeSets.add(tx.getHash());
             System.out.print("## [" + Thread.currentThread().getName() + "] ");
             System.out.println(" Receive pending tx from observe : " + observeSets.size());
@@ -229,7 +239,7 @@ public class FilterTest extends AbstractTestRunner {
         TimeUnit.MINUTES.sleep(1);
         SimpleLogger.println("filter : {} , observe : {}", filterSets.size(), observeSets.size());
         System.out.println("## End ##");
-        subscription.unsubscribe();
+        subscription.dispose();
     }
 
     @Test
