@@ -8,3 +8,5 @@
 ; 하이퍼레저 개념, 세팅, fabric-sdk-java 관련 샘플 코드
 - <a href="consensus">Consensus</a>  
 ; clique, aura, tendermint, fabric-orderer, fabric-raft 등 consensus 관련 정리 (작업 중)
+- <a href="guide">Guide</a>  
+; 사내 이더리움 가이드 내용 정리
