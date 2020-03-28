@@ -16,6 +16,11 @@
 [2.2.transaction.md](./2.2.transaction.md)   
 ; 트랜잭션 필드 설명 및 Web3j를 이용한 서명
 
+[2.3.block.md](./2.3.block.md)   
+; 블록 필드 설명(ethash, clique, aura), 동기화  
+
+
+
 # Reference  
 
 - 코어 이더리움 프로그래밍  
