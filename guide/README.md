@@ -19,6 +19,8 @@
 [2.3.block.md](./2.3.block.md)   
 ; 블록 필드 설명(ethash, clique, aura), 동기화  
 
+[3.consensus.md](./3.consensus.md)   
+; 합의 엔진(PoW, Clique, Aura) 설명  
 
 
 # Reference  
@@ -33,11 +35,12 @@ https://book.naver.com/bookdb/book_detail.nhn?bid=13496085
 
 ## TEMPORARY
 
-2. 데이터 계층
-
-- 블록 데이터 구조
-
 3. 공통계층
 - p2p  
 - RLP 인코딩  
 - 데이터 저장  
+
+## TODO  
+
+- 2.3.block.md에서 parity field 설명
+- 3.consensus.md에서 parity finality empty step 설명  
