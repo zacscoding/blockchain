@@ -35,9 +35,9 @@ https://book.naver.com/bookdb/book_detail.nhn?bid=13496085
 
 ## TEMPORARY
 
-3. 공통계층
-- p2p  
+4. 공통계층
 - RLP 인코딩  
+- p2p  
 - 데이터 저장  
 
 ## TODO  
