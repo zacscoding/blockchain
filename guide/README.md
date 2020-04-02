@@ -22,6 +22,18 @@
 [3.consensus.md](./3.consensus.md)   
 ; 합의 엔진(PoW, Clique, Aura) 설명  
 
+[4.1.RLP.md](./4.1.RLP.md)   
+; RLP 인코딩 규칙 설명 및 web3j를 이용한 예제  
+
+[4.2.trie.md](./4.2.trie.md)   
+; 머클 트리(Merkel tree), 기수 트리(Radix tree), 패트리시아 트리(Patricia tree), 이더리움 머클 패트리시아 트리에 대한 설명  
+
+[4.3.trie.md](./4.2.trie.md)   
+; 머클 트리(Merkel tree), 기수 트리(Radix tree), 패트리시아 트리(Patricia tree), 이더리움 머클 패트리시아 트리에 대한 설명  
+
+[5.application.md](./5.application.md)   
+; 블록체인의 Finality, Nonce  
+
 
 # Reference  
 
