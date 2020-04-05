@@ -28,19 +28,16 @@
 [4.2.trie.md](./4.2.trie.md)   
 ; 머클 트리(Merkel tree), 기수 트리(Radix tree), 패트리시아 트리(Patricia tree), 이더리움 머클 패트리시아 트리에 대한 설명  
 
-[4.3.trie.md](./4.2.trie.md)   
-; 머클 트리(Merkel tree), 기수 트리(Radix tree), 패트리시아 트리(Patricia tree), 이더리움 머클 패트리시아 트리에 대한 설명  
+[4.3.rpc.md](./4.3.rpc.md)   
+; web3j를 이용한 기본 RPC 사용법
 
 [5.application.md](./5.application.md)   
-; 블록체인의 Finality, Nonce  
-
+; 블록체인의 Finality, Nonce, Node state  
 
 # Reference  
 
 - 코어 이더리움 프로그래밍  
 https://book.naver.com/bookdb/book_detail.nhn?bid=13496085  
-
--
 
 
 ---  
