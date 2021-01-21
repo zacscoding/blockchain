@@ -14,7 +14,7 @@
 		"fs": "0.0.1-security",
 		"hooked-web3-provider": "^1.0.0",
 		"keythereum": "^1.0.4",
-		"socket.io": "1.6.0",
+		"socket.io": "2.4.0",
 		"solc": "0.4.8",
 		"truffle-contract": "^3.0.6",
 		"web3": "0.16.0"
