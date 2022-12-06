@@ -10,7 +10,7 @@
 	"dependencies": {
 		"ethereumjs-testrpc": "^6.0.3",
 		"ethereumjs-tx": "^1.3.7",
-		"express": "4.14.0",
+		"express": "4.17.3",
 		"fs": "0.0.1-security",
 		"hooked-web3-provider": "^1.0.0",
 		"keythereum": "^1.0.4",
